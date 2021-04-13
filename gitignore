@@ -1,0 +1,14 @@
+*.pyc
+*.egg-info
+.coverage
+build
+dist
+.tox
+debian/.debhelper/**
+debian/files
+debian/pygtail/**
+debian/tmp/**
+debian/python-pygtail*
+debian/python3-pygtail*
+.pybuild/
+lib/_pycache_
