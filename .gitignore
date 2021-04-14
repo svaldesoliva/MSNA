@@ -11,4 +11,5 @@ debian/tmp/**
 debian/python-pygtail*
 debian/python3-pygtail*
 .pybuild/
-lib/_pycache_
+lib/__pycache__/*
+tarea_manuel_cano.py
