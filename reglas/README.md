@@ -5,12 +5,14 @@ archivo base donde se puedan agregar las clasificaciones de los archivos de form
 
 # Salida
 ## Archivo
-El archivo de salida se llama clasificacion_base.csv aun que es configurable
+El archivo de salida se llama clasificacion_base.csv, aunque ese nombre configurable
 
 ## Campos
+SID, Etapa, Subetapa, Observaciones, archivo, alerta
 - SID, sid de la regla
-- ID_Clasificacion, en blanco para llenar
-- nombre_clasificacion, en blanco para llenar
+- Etapa, en blanco para llenar
+- Subetapa, en blanco para llenar
+- Observaciones, en blanco para llenar
 - archivo, nombre del archivo que contiene la regla, indica tipo
 - alerta, alerta como estaba escrita en el archivo salvo que su separacion por ; cambió por ,
 
