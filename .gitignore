@@ -13,3 +13,4 @@ debian/python3-pygtail*
 .pybuild/
 lib/__pycache__/*
 tarea_manuel_cano.py
+*.offset
