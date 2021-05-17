@@ -14,3 +14,4 @@ debian/python3-pygtail*
 lib/__pycache__/*
 tarea_manuel_cano.py
 *.offset
+sid_sin_clasificar.csv
