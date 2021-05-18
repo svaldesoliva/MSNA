@@ -23,6 +23,7 @@ servicio=False
 import pandas as pd
 from pygtail import Pygtail
 import lib.carga
+import lib.procesa
 import os
 
 __version__ = '0.1'
@@ -39,29 +40,43 @@ def start():
 	-------
 	
 	"""
+	# Indicadores, inicial vacío
+	indicadores_atacantes = pd.DataFrame(columns=('Origen', 'Etapa', 'contador'))
+	indicadores_hosts = pd.DataFrame(columns=('Destino', 'Etapa', 'contador'))
+	indicadores_detalle = pd.DataFrame(columns=('Origen', 'Destino', 'Etapa', 'contador'))
+	# Registro general de alertas ya clasificadas, inicial vacío
+	repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Origen','Destino'))
 	# Carga inicial de clasificacion de reglas 
 	clasificacion = pd.read_csv(reglasClasificacion,encoding="latin-1",sep=";")
 	lib.carga.crear_archivo_sid_sin_clasificar()
 
 	if servicio:
 		while True:
-			run(clasificacion)
-			time.sleep(60)
+			run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, indicadores_hosts, indicadores_detalle)
+			time.sleep(5) # en segundos
 	else:
 		# Si no es servicio, reiniciamos la lectura de las alertas
 		if os.path.exists( archivoAlertas + ".offset"):
 			os.remove( archivoAlertas + ".offset")
-		run(clasificacion)
+		run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 
 
-def run(clasificacion):
+def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, indicadores_hosts, indicadores_detalle):
 	"""
 	Orquesta la ejecución del proceso
 
 	Parameters
 	----------
+	repositorioAlertasClasificadas: Dataframe
+		Panda Dataframe que contiene las alertas previamente clasificadas, para poder buscar detalle de ser necesario
 	clasificacion : Dataframe
 		Panda Dataframe que contiene los tipos de alerta definidos, que incluye el SID y la etapa de CKC correspondiente 
+	indicadores_atacantes: Dataframe
+		Indicadores de avance del ataque, conteo por atacante
+	indicadores_hosts: Dataframe
+		Indicadores de avance del ataque, conteo por host o victima
+	indicadores_detalle: Dataframe
+		Indicadores de avance del ataque, conteo cruzado a modo de detalle precalculado
 	Returns
 	-------
 	
@@ -69,7 +84,12 @@ def run(clasificacion):
 	# Leer y procesa linea a linea. Pygtail solo lee lineas (alertas) nuevas
 	for linea in Pygtail( archivoAlertas ):
 	    alerta=lib.carga.separa(linea)
+	    # Clasificar tipo (1,2,3,4); o null/vacia: si no es de interes o es imposible de clasificar
 	    alertaClasificada=lib.carga.clasifica(alerta, clasificacion)
+	    if ( not alertaClasificada is None ) and ( len(alertaClasificada.index) > 0 ): # Se procesa solo si no viene vacía
+	    	repositorioAlertasClasificadas.append(alertaClasificada, ignore_index=True)
+	    	indicadores_atacantes, indicadores_hosts, indicadores_detalle = lib.procesa.generaIndicadores(alertaClasificada, 
+	    							indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 
 if __name__ == '__main__':
     start()

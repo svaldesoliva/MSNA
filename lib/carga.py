@@ -54,8 +54,8 @@ def clasifica(alerta, clasificacion):
 		campos del CSV de clasificacion: SID, Etapa, Subetapa, Observaciones, archivo, alerta 
 	Returns
 	-------
-	AlertaClasificada: Dataframe
-		Panda Dataframe que contiene la alerta ya clasificada
+	AlertaClasificada: Dataframe or None
+		Panda Dataframe que contiene la alerta ya clasificada, None si no se puede clasificar
 	"""
 
 	# Busqueda en Panda Dataframe
@@ -67,7 +67,7 @@ def clasifica(alerta, clasificacion):
 		####clasificacionAlerta["Etapa"][clasificacionAlerta.index].astype('int32')
 		etapa = int(clasificacionAlerta["Etapa"].item())
 		if ( etapa > 0 and etapa < 5 ): # Etapas validas 1,2,3,4 - las otras son ignoradas
-			print(etapa, end="")
+			#print(etapa, end="")  # Monitorear avance en desarrollo
 			if not ptypes.is_numeric_dtype(clasificacionAlerta["Subetapa"]) or math.isnan(clasificacionAlerta['Subetapa']):
 				subetapa = 0 # Si viene vacio, vale 0
 			else:
@@ -81,7 +81,7 @@ def clasifica(alerta, clasificacion):
 			return(AlertaClasificada)
 	else: 
 		guarda_sid_sin_clasificar(alerta[2])
-	return()
+	return(None)
 
 
 def guarda_sid_sin_clasificar(sid):
