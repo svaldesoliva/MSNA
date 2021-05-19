@@ -13,6 +13,7 @@ SID, Etapa, Subetapa, Observaciones, archivo, alerta
 - Etapa, en blanco para llenar
 - Subetapa, en blanco para llenar
 - Observaciones, en blanco para llenar
+- tipo_destino, dato necesario para procesamiento en siguiente etapa. codigos: 1 HOME_NET / 2 EXTERNAL_NET / 0 DESCONOCIDO
 - archivo, nombre del archivo que contiene la regla, indica tipo
 - alerta, alerta como estaba escrita en el archivo salvo que su separacion por ; cambió por ,
 
