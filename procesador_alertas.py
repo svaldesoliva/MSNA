@@ -92,9 +92,9 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 	    							indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 
 	 # Operacion final
-	indicadores_atacantes.to_csv("indicadores_atacantes.csv", index=False)	
-	indicadores_hosts.to_csv("indicadores_hosts.csv", index=False)
-	indicadores_detalle.to_csv("indicadores_detalle.csv", index=False)
+	indicadores_atacantes.to_csv("indicadores_atacantes.csv",encoding="latin-1",sep=";", index=False)	
+	indicadores_hosts.to_csv("indicadores_hosts.csv",encoding="latin-1",sep=";", index=False)
+	indicadores_detalle.to_csv("indicadores_detalle.csv",encoding="latin-1",sep=";", index=False)
 
 if __name__ == '__main__':
     start()
