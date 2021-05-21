@@ -11,7 +11,7 @@ SALIDA="../clasificacion_base.csv"
 TSL=$'\n'
 cd rules
 rm -f $SALIDA
-echo "SID; Etapa; Subetapa; Observaciones; tipo_destino; archivo; alerta" > $SALIDA
+echo "SID;Etapa;Subetapa;Observaciones;tipo_destino;archivo;alerta" > $SALIDA
 for f in *.rules ; do
 	echo -n "Procesando: $f"
 	#listado de alerta de in archivo, ie filas que no sean comentarios

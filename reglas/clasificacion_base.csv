@@ -1,4 +1,4 @@
-SID; Etapa; Subetapa; Observaciones; tipo_destino; archivo; alerta
+SID;Etapa;Subetapa;Observaciones;tipo_destino;archivo;alerta
 1292;;;;2;attack-responses.rules;"alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:""ATTACK-RESPONSES directory listing"", flow:established, content:""Volume Serial Number"", classtype:bad-unknown, sid:1292, rev:9,)"
 494;;;;2;attack-responses.rules;"alert tcp $HTTP_SERVERS $HTTP_PORTS -> $EXTERNAL_NET any (msg:""ATTACK-RESPONSES command completed"", flow:established, content:""Command completed"", nocase, reference:bugtraq,1806, classtype:bad-unknown, sid:494, rev:10,)"
 495;;;;2;attack-responses.rules;"alert tcp $HTTP_SERVERS $HTTP_PORTS -> $EXTERNAL_NET any (msg:""ATTACK-RESPONSES command error"", flow:established, content:""Bad command or filename"", nocase, classtype:bad-unknown, sid:495, rev:8,)"
