@@ -35,41 +35,42 @@ def generaIndicadores(alertaClasificada, indicadores_atacantes, indicadores_host
 	indicadores_detalle: Dataframe
 		retorna indicadores de avance del ataque, conteo cruzado a modo de detalle precalculado, considerando la nueva alerta	
 	"""
-	#indicadores_atacantes = pd.DataFrame(columns=('Origen', 'Etapa', 'contador'))
-	#indicadores_hosts = pd.DataFrame(columns=('Destino', 'Etapa', 'contador'))
-	#indicadores_detalle = pd.DataFrame(columns=('Origen', 'Destino', 'Etapa', 'contador'))
-	#repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Origen','Destino'))
-
+	#indicadores_atacantes = pd.DataFrame(columns=('Remoto', 'Etapa', 'contador'))
+	#indicadores_hosts = pd.DataFrame(columns=('Local', 'Etapa', 'contador'))
+	#indicadores_detalle = pd.DataFrame(columns=('Remoto', 'Local', 'Etapa', 'contador'))
+	#repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Remoto','Local'))
+	#tipo_destino, dato necesario para procesamiento en siguiente etapa. codigos: 1 HOME_NET / 2 EXTERNAL_NET / 0 DESCONOCIDO
+	
 	# Busqueda 
-	resultado_indicadores_atacantes=indicadores_atacantes.query("Origen == '" + str(alertaClasificada["Origen"].item()) + 
+	resultado_indicadores_atacantes=indicadores_atacantes.query("Remoto == '" + str(alertaClasificada["Remoto"].item()) + 
 			"' and Etapa == " + str(alertaClasificada["Etapa"].item()) )
 	if len(resultado_indicadores_atacantes.index)==0: # Si no existe -> creamos y agregamos
-		#indicadores_atacantes_add = {	'Origen': alertaClasificada["Origen"].item(),
+		#indicadores_atacantes_add = {	'Remoto': alertaClasificada["Remoto"].item(),
 		#								'Etapa': alertaClasificada["Etapa"].item(),
 		#								'contador':1 }	
 		#indicadores_atacantes.append(indicadores_atacantes_add, ignore_index=True)
-		indicadores_atacantes.loc[len(indicadores_atacantes.index)] = [alertaClasificada["Origen"].item(), alertaClasificada["Etapa"].item(), 1] 
+		indicadores_atacantes.loc[len(indicadores_atacantes.index)] = [alertaClasificada["Remoto"].item(), alertaClasificada["Etapa"].item(), 1] 
 	else: # Ya existía, aumentamos 1 el contador
 		indicadores_atacantes["contador"][resultado_indicadores_atacantes.index] = resultado_indicadores_atacantes["contador"].item() + 1
 
 	# Busqueda 
-	resultado_indicadores_hosts=indicadores_hosts.query("Destino == '" + str(alertaClasificada["Destino"].item()) + 
+	resultado_indicadores_hosts=indicadores_hosts.query("Local == '" + str(alertaClasificada["Local"].item()) + 
 			"' and Etapa == " + str(alertaClasificada["Etapa"].item()) )
 	if len(resultado_indicadores_hosts.index)==0: # Si no existe -> creamos y agregamos
-		indicadores_hosts.loc[len(indicadores_hosts.index)] = [alertaClasificada["Destino"].item(), alertaClasificada["Etapa"].item(), 1] 
+		indicadores_hosts.loc[len(indicadores_hosts.index)] = [alertaClasificada["Local"].item(), alertaClasificada["Etapa"].item(), 1] 
 	else: # Ya existía, aumentamos 1 el contador
 		indicadores_hosts["contador"][resultado_indicadores_hosts.index] = resultado_indicadores_hosts["contador"].item() + 1
 
 	# Busqueda 
 	resultado_indicadores_detalle=indicadores_detalle.query(
-		"Origen == '" + str(alertaClasificada["Origen"].item()) + "' and " + 
+		"Remoto == '" + str(alertaClasificada["Remoto"].item()) + "' and " + 
 		"Etapa == " + str(alertaClasificada["Etapa"].item()) + " and " +
-		"Destino == '" + str(alertaClasificada["Destino"].item()) + "'")
+		"Local == '" + str(alertaClasificada["Local"].item()) + "'")
 	if len(resultado_indicadores_detalle.index)==0: # Si no existe -> creamos y agregamos
-		indicadores_detalle.loc[len(indicadores_detalle.index)] = [alertaClasificada["Origen"].item(), alertaClasificada["Destino"].item(), alertaClasificada["Etapa"].item(), 1] 
+		indicadores_detalle.loc[len(indicadores_detalle.index)] = [alertaClasificada["Remoto"].item(), alertaClasificada["Local"].item(), alertaClasificada["Etapa"].item(), 1] 
 	else: # Ya existía, aumentamos 1 el contador
 		indicadores_detalle["contador"][resultado_indicadores_detalle.index] = resultado_indicadores_detalle["contador"].item() + 1
 
-		print(indicadores_detalle)
+		#print(indicadores_detalle)
 
 	return(indicadores_atacantes, indicadores_hosts, indicadores_detalle)

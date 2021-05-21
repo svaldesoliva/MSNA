@@ -72,12 +72,19 @@ def clasifica(alerta, clasificacion):
 				subetapa = 0 # Si viene vacio, vale 0
 			else:
 				subetapa = int(clasificacionAlerta["Subetapa"].item())
+
+			if ( clasificacionAlerta["tipo_destino"].item() == 2 ): # 2 -> origen = local / estino = remoto
+				remoto = alerta[8]
+				local = alerta[6]
+			else: # 1 -> origen = local / estino = remoto  ///  
+				remoto = alerta[6]
+				local = alerta[8]
 			AlertaClasificada = pd.DataFrame({	'timestamp': alerta[0],
 										'SID': alerta[2],
 										'Etapa': etapa,
 										'Subetapa': subetapa,
-										'Origen': alerta[6],
-										'Destino': alerta[8]  }, index=[0])
+										'Remoto': remoto,
+										'Local': local  }, index=[0])
 			return(AlertaClasificada)
 	else: 
 		guarda_sid_sin_clasificar(alerta[2])
