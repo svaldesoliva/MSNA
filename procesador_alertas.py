@@ -83,7 +83,7 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 	Returns
 	-------
 	
-	""
+	"""
 	if not servicio:
 		f = open(archivoAlertas, 'r')
 		bar1 = Bar('Procesando:', max=len(f.readlines()))
@@ -142,7 +142,7 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 	df.plot(kind="bar",stacked=True,figsize=(10,8))
 	plt.legend(loc="lower left",bbox_to_anchor=(0.8,1.0))
 	plt.show()	
-
+"""
 
 if __name__ == '__main__':
     start()
