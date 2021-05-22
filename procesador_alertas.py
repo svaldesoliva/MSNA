@@ -18,6 +18,10 @@ reglasClasificacion = "clasificacion.csv" #Archivo con reglas clasificadas
 #   False:	leerá desde el inicio cada vez. sin loop
 servicio=False 
 
+
+# Carpeta web en donde se realizará la entrega de los datos
+carpetaSalida = "html/data/"
+
 #################################################################
 # Software
 import pandas as pd
@@ -26,7 +30,6 @@ import lib.carga
 import lib.procesa
 import os
 from progress.bar import Bar
-import matplotlib.pyplot as plt
 
 
 __version__ = '0.1'
@@ -44,9 +47,9 @@ def start():
 	
 	"""
 	# Indicadores, inicial vacío
-	indicadores_atacantes = pd.DataFrame(columns=('Remoto', 'Etapa', 'contador'))
-	indicadores_hosts = pd.DataFrame(columns=('Local', 'Etapa', 'contador'))
-	indicadores_detalle = pd.DataFrame(columns=('Remoto', 'Local', 'Etapa', 'contador'))
+	indicadores_atacantes = pd.DataFrame(columns=('Remoto', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'))
+	indicadores_hosts = pd.DataFrame(columns=('Local', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'))
+	indicadores_detalle = pd.DataFrame(columns=('Remoto', 'Local', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'))
 	# Registro general de alertas ya clasificadas, inicial vacío
 	repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Remoto','Local'))
 	# Carga inicial de clasificacion de reglas 
@@ -84,10 +87,11 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 	-------
 	
 	"""
-	if not servicio:
+	if not servicio: #Leemos la cantidad de lineas para ver el avance
 		f = open(archivoAlertas, 'r')
-		bar1 = Bar('Procesando:', max=len(f.readlines()))
+		operaciones=len(f.readlines())
 		f.close()
+		bar1 = Bar('Procesando:', max=operaciones, suffix = ' %(index)d/%(max)d - remanente %(eta)ds ')
 
 	# Leer y procesa linea a linea. Pygtail solo lee lineas (alertas) nuevas	
 	for linea in Pygtail( archivoAlertas ):
@@ -95,7 +99,10 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 	    # Clasificar tipo (1,2,3,4); o null/vacia: si no es de interes o es imposible de clasificar
 	    alertaClasificada=lib.carga.clasifica(alerta, clasificacion)
 	    if ( not alertaClasificada is None ) and ( len(alertaClasificada.index) > 0 ): # Se procesa solo si no viene vacía
-	    	repositorioAlertasClasificadas.append(alertaClasificada, ignore_index=True)
+	    	##repositorioAlertasClasificadas.append(alertaClasificada, ignore_index=True)
+	    	## 'timestamp','SID','Etapa','Subetapa','Remoto','Local'
+	    	repositorioAlertasClasificadas.loc[len(repositorioAlertasClasificadas.index)] = [alertaClasificada["timestamp"].item(), alertaClasificada["SID"].item(), alertaClasificada["Etapa"].item(), alertaClasificada["Subetapa"].item(), alertaClasificada["Remoto"].item(), alertaClasificada["Local"].item()]
+
 	    	indicadores_atacantes, indicadores_hosts, indicadores_detalle = lib.procesa.generaIndicadores(alertaClasificada, 
 	    							indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 
@@ -108,41 +115,30 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 		bar1.finish()
 
 	 # Operacion final
-	indicadores_atacantes.sort_values(['Remoto', 'Etapa'], ascending=[True, True])
-	indicadores_atacantes.to_csv("indicadores_atacantes.csv",encoding="latin-1",sep=";", index=False)	
+	repositorioAlertasClasificadas.to_csv(carpetaSalida + "alertas_clasificadas.csv",encoding="latin-1",sep=";", index=False)
 
-	indicadores_hosts.sort_values(['Local', 'Etapa'], ascending=[True, True])
-	indicadores_hosts.to_csv("indicadores_hosts.csv",encoding="latin-1",sep=";", index=False)
+	indicadores_atacantes.sort_values(['Etapa 1'], ascending=[False])
+	indicadores_atacantes.to_csv(carpetaSalida + "indicadores_atacantes.csv",encoding="latin-1",sep=";", index=False)	
 
-	indicadores_detalle.sort_values(['Remoto', 'Local', 'Etapa'], ascending=[True, True, True])
-	indicadores_detalle.to_csv("indicadores_detalle.csv",encoding="latin-1",sep=";", index=False)
+	indicadores_hosts.sort_values(['Etapa 1'], ascending=[False])
+	indicadores_hosts.to_csv(carpetaSalida + "indicadores_hosts.csv",encoding="latin-1",sep=";", index=False)
 
-	"""
-	indicadores_atacantes = pd.read_csv("indicadores_atacantes.csv",encoding="latin-1",sep=";")
-	indicadores_hosts = pd.read_csv("indicadores_hosts.csv",encoding="latin-1",sep=";")
-	indicadores_detalle = pd.read_csv("indicadores_detalle.csv",encoding="latin-1",sep=";")
+	indicadores_detalle.sort_values(['Etapa 1'], ascending=[False])
+	indicadores_detalle.to_csv(carpetaSalida + "indicadores_detalle.csv",encoding="latin-1",sep=";", index=False)
 
-#https://www.delftstack.com/es/howto/matplotlib/pandas-plot-multiple-columns-on-bar-chart-matplotlib/
-#http://bl.ocks.org/ndarville/7075823
+	if not servicio:
+		print(indicadores_atacantes)
+		print(indicadores_hosts)
+		print(indicadores_detalle)
+	#""
 
-	l1=indicadores_hosts.query("Local == '192.168.100.128'")
+	#https://www.delftstack.com/es/howto/matplotlib/pandas-plot-multiple-columns-on-bar-chart-matplotlib/
+	#http://bl.ocks.org/ndarville/7075823
+	#"
 
+	lib.procesa.generaGraficos( "indicadores_atacantes.csv", "indicadores_hosts.csv",  "indicadores_detalle.csv", carpetaSalida )
 
-	hosts=["192.168.100.128"]
-	ataques={
-	    "Ataques 1":[10],
-	    "2":[20],
-	    "3":[18],
-	    "4":[18],
-	}
-
-	df=pd.DataFrame(ataques,index=hosts)
-#	df.DataFrame({	'SID': sid }, index=[0])
-
-	df.plot(kind="bar",stacked=True,figsize=(10,8))
-	plt.legend(loc="lower left",bbox_to_anchor=(0.8,1.0))
-	plt.show()	
-"""
+	#""
 
 if __name__ == '__main__':
     start()
