@@ -18,6 +18,13 @@ instalación: pip install progress
 Homepage https://matplotlib.org/
 instalación: pip install matplotlib
 
+### plotly
+Homepage https://plotly.com/python/
+instalación: pip3 install plotly
+
+### numpy 
+instalación: pip3 install numpy
+
 <!---
 ## Notas adicionales
 python-daemon - https://github.com/martinrusev/python-daemon/
