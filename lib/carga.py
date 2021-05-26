@@ -94,7 +94,8 @@ def clasifica(alerta, clasificacion):
 def guarda_sid_sin_clasificar(sid):
 	"""
 	Si la etapa del tipo de alerta no está asignada se registra su Snort ID (SID)
-	para futura clasificación
+	para futura clasificación, si ya está registrada se suma en uno su ocurrencia
+	esto revelará su importancia
 
 	Parameters
 	----------
@@ -108,9 +109,11 @@ def guarda_sid_sin_clasificar(sid):
 	mdata = sid_nc.query("SID == " + sid)
 	if len(mdata.index) == 0: # Solo si SID no estaba antes
 		#print(sid) # Monitoreo de avance durante desarrollo
-		nueva_nc = pd.DataFrame({	'SID': sid }, index=[0])
+		nueva_nc = pd.DataFrame({	'SID': sid , 'Cantidad': 1}, index=[0])
 		sid_nc = sid_nc.append(nueva_nc, ignore_index=True)
-		sid_nc.to_csv(archivo_sid_sin_clasificar, index=False)	
+	else:
+		sid_nc.loc[mdata.index, "Cantidad"] = sid_nc.loc[mdata.index, "Cantidad"] + 1
+	sid_nc.to_csv(archivo_sid_sin_clasificar, index=False,encoding="latin-1",sep=";")	
 	return()
 
 
@@ -128,7 +131,7 @@ def crear_archivo_sid_sin_clasificar():
 	"""
 	if not os.path.exists(archivo_sid_sin_clasificar): # Creamos archivo vacío
 		archivo_guardar = open( archivo_sid_sin_clasificar ,"w")
-		fila_para_escribir = "SID\n"
+		fila_para_escribir = "SID;Cantidad\n"
 		archivo_guardar.write(fila_para_escribir)
 		archivo_guardar.close()
 	return()
