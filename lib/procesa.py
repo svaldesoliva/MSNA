@@ -16,6 +16,11 @@ import matplotlib.pyplot as plt
 #from matplotlib.sankey import Sankey
 import plotly
 
+import numpy as np
+#from datetime import datetime
+#import matplotlib.dates as mdates
+
+
 def generaIndicadores(alertaClasificada, indicadores_atacantes, indicadores_hosts, indicadores_detalle):
 	"""
 	Genera indicadores macro durante la ejecución del proceso
@@ -82,7 +87,7 @@ def generaIndicadores(alertaClasificada, indicadores_atacantes, indicadores_host
 
 
 
-def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSalida):
+def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_clasificadas, carpetaSalida):
 	"""
 	Genera graficos basados en los indicadores macro, carga desde archivos para evitar
 	que el "index" del dataframe salga dibujado
@@ -103,8 +108,10 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 	"""
 	indicadores_atacantes = pd.read_csv(carpetaSalida + archivo_atacantes,encoding="latin-1",sep=";", index_col=0)
 	indicadores_hosts = pd.read_csv(carpetaSalida + archivo_hosts,encoding="latin-1",sep=";", index_col=0)
-	indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
-
+	#indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
+	alertas_clasificadas = pd.read_csv(carpetaSalida + archivo_clasificadas,encoding="latin-1",sep=";")
+	
+	#
 	# Graficos por Atacante
 	#    
 	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
@@ -114,6 +121,8 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 	plt.ylabel('Atacante')
 	#plt.show()	 #os.path.join('test.png') # use format='svg' or 'pdf' for vectorial pictures
 	plt.savefig(carpetaSalida + 'imagenResumenAtacante.svg', dpi=300, format='svg', bbox_inches='tight') 
+	plt.close()
+
 
 	# escala logaritmica
 	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=True, color=["#6ec7ff","#ffff5a","#fdad60","#d43d4f"])
@@ -121,7 +130,11 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('Atacante')
 	plt.savefig(carpetaSalida + 'imagenResumenAtacante_log.svg', dpi=300, format='svg', bbox_inches='tight') 
+	plt.close()
 
+	indicadores_atacantes=pd.DataFrame() # Vaciamos el dataframe
+
+	#
 	# Graficos por Host
 	#    
 	indicadores_hosts.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
@@ -131,6 +144,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 	plt.ylabel('hosts')
 	#plt.show()	 #os.path.join('test.png') # use format='svg' or 'pdf' for vectorial pictures
 	plt.savefig(carpetaSalida + 'imagenResumenHosts.svg', dpi=300, format='svg', bbox_inches='tight') 
+	plt.close()
 
 	# escala logaritmica
 	indicadores_hosts.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=True, color=["#6ec7ff","#ffff5a","#fdad60","#d43d4f"])
@@ -138,91 +152,14 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('hosts')
 	plt.savefig(carpetaSalida + 'imagenResumenHosts_log.svg', dpi=300, format='svg', bbox_inches='tight')
+	plt.close()
 
+	indicadores_hosts=pd.DataFrame() # Vaciamos el dataframe
+
+	#
+	# Indicadores detalle
+	#
 	"""
-	fig = plt.figure(figsize=(8, 12))
-	ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[],
-	                     title="Statistics from the 2nd edition of\nfrom Audio Signal Processing for Music Applications by Stanford University\nand Universitat Pompeu Fabra of Barcelona on Coursera (Jan. 2016)")
-	learners = [14460, 9720, 7047, 3059, 2149, 351]
-	labels = ["Total learners joined", "Learners that visited the course", "Learners that watched a lecture",
-	         "Learners that browsed the forums", "Learners that submitted an exercise", 
-	          "Learners that obtained a grade >70%\n(got a Statement of Accomplishment)"]
-	colors = ["#FF0000", "#FF4000", "#FF8000", "#FFBF00", "#FFFF00"]
-
-	sankey = Sankey(ax=ax, scale=0.0015, offset=0.3)
-	# Paso 1 (prior=0)
-	sankey.add(flows=[1, -1],
-	       labels=['input', 'output'])
-
-	# Paso 2 (prior=1)
-	sankey.add(flows=[1, -1],
-	          labels=['input2', 'output2'],
-	          prior=0,
-	          connect=(1, 0))
-
-	# Paso 3 (prior=2)
-	sankey.add(flows=[1, -1],
-	          labels=['input2', 'output2'],
-	          prior=1,
-	          connect=(1, 0))
-
-	# Paso 4 (prior=3)
-	sankey.add(flows=[1, -1],
-	          labels=['input2', 'Final'],
-	          prior=2,
-	          connect=(1, 0))
-
-	sankey.finish()
-	plt.savefig(carpetaSalida + 'imagenPasos.svg', dpi=300, format='svg', bbox_inches='tight')
-
-	"""
-	"""
-	# https://flothesof.github.io/sankey-tutorial-matplotlib.html
-	fig = plt.figure(figsize=(12, 8))
-	ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[],
-	                     title="Test")
-	learners = [17, 104, 232, 2]
-	labels = ["Etapa 1", "Etapa 2", "Etapa 3", "Etapa 4"]
-	colors = ["#6ec7ff","#ffff5a","#fdad60","#d43d4f"]
-
-	sankey = Sankey(ax=ax)#, scale=0.0015, offset=0.3)
-	for input_learner, output_learner, label, prior, color in zip(learners[:-1], learners[1:], 
-	                                                              labels, [None, 0, 1, 2],
-	                                                             colors):
-	    if prior != 2:
-	        sankey.add(flows=[input_learner, -output_learner, output_learner - input_learner],
-					orientations=[0, 0, 1],
-					patchlabel=label,
-					labels=['', None, 'otro'],
-					prior=prior,
-					connect=(1, 0),
-					pathlengths=[0, 0, 2],
-					trunklength=10.,
-					rotation=0,
-					facecolor=color)
-	    else:
-	        sankey.add(flows=[input_learner, -output_learner, output_learner - input_learner],
-					orientations=[0, 0, 1],
-					patchlabel=label,
-					labels=['', labels[-1], 'otro'],
-					prior=prior,
-					connect=(1, 0),
-					pathlengths=[0, 0, 10],
-					trunklength=10.,
-					rotation=0,
-					facecolor=color)
-	diagrams = sankey.finish()
-	for diagram in diagrams:
-	    diagram.text.set_fontweight('bold')
-	    diagram.text.set_fontsize('10')
-	    for text in diagram.texts:
-	        text.set_fontsize('10')
-	ylim = plt.ylim()
-	plt.ylim(ylim[0]*1.05, ylim[1])
-
-	plt.savefig(carpetaSalida + 'imagenPasos.svg', dpi=300, format='svg', bbox_inches='tight')
-	"""
-
 	largo=len(indicadores_detalle)
 	df_detalle = pd.DataFrame(columns=('Remoto','Etapa','Local','Contador'))
 	for i in range(largo): 
@@ -233,27 +170,147 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, carpetaSal
 
 
 	fig = genSankey(df_detalle,cat_cols=['Remoto','Etapa','Local'],value_cols='Contador',title='Grafico')
-	#plotly.offline.plot(fig, validate=False)
 	plotly.offline.plot(fig, filename=carpetaSalida + 'detalle_interactivo.html')
-
-
-	"""
-	pip3 install plotly
+	#plot_mpl(fig, image='png', filename=carpetaSalida + 'detalle_interactivo.png')
 	"""
 
+	#
+	# Avance en los cambios de etapa
+	#
+	
+	#alertas_etapa4=alertas_clasificadas.query("Etapa == 4").groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
+	alertas_interes0=alertas_clasificadas.groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
+	
+	#por problemas de memoria nos centramos en graficos mas interesantes
+	alertas_etapa4=alertas_interes0.query("Total > 10") #no muy ambiciooso mas de 5 alertas
+	alertas_etapa4 = alertas_etapa4.reset_index()
+	alertas_interes0=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
+
+	for index, row in alertas_etapa4.iterrows():
+		alertas_interes=alertas_clasificadas.query("Remoto == '" + str(row['Remoto']) + "'")
+
+		cantidad = [] 
+		fechahora = []
+		etapas = []
+		contadormaximo = 0
+		etapa = -1 #inicial
+		nombres = []
+		for index2, row2 in alertas_interes.iterrows():
+			if ( etapa == -1 or etapa != row2['Etapa']): #Inicial o cambio de etapa, a reiniciar variables
+				if ( etapa != -1 ): # Es cambio de etapa, hacemos el registro
+					cantidad.append(contador)
+					nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
+					fechahora.append(inicio)
+					if (etapa == 1): 
+						etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
+					if (etapa == 2):
+						etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
+					if (etapa == 3):
+						etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
+					if (etapa == 4):
+						etapas.append([212/255, 61/255, 79/255]) #d43d4f - rojo
+
+					if ( contador > contadormaximo ):
+						contadormaximo = contador
+				etapa = row2['Etapa'] #nueva etapa
+				contador = 1 # actual alerta
+				inicio = row2['timestamp'] #row2['timestamp'].split(".",1)[0] #momento del cambio de estado
+			else: #comun, seguimos en la misma etapa
+				contador = contador + 1 #conteo dentro de la misma etapa
+
+		# Última etapa, hacemos el registro
+		cantidad.append(contador)
+		nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
+		fechahora.append(inicio)
+		if (etapa == 1): 
+			etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
+		if (etapa == 2):
+			etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
+		if (etapa == 3):
+			etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
+		if (etapa == 4):
+			etapas.append([212/255, 61/255, 79/255]) #d43d4f - rojo
+
+		if ( contador > contadormaximo ):
+			contadormaximo = contador
+
+		niveles = []
+		signo = -1
+		for v in cantidad:
+			signo = -1 * signo
+			niveles.append(signo * 0.05 * v / contadormaximo )
+
+		generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto']), carpetaSalida, str(row['Total']) )
+	
+		alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
+
+
+def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total_alertas ):
+	"""
+	Genera graficos tipo timeline de un solo atacante separado del resto.
+	https://matplotlib.org/stable/gallery/lines_bars_and_markers/timeline.html#sphx-glr-gallery-lines-bars-and-markers-timeline-py
+
+	Parameters
+	----------
+	levels: array
+		nivel o largo de cada barra, propocional al numero de ataques que corresponda, y corregido 
+		para que el maximo numero de la barra mas larga
+	names: array
+		nombre de cada evento, acá se usa la cantidad
+	dates: array
+		fechas
+	colores: array
+		color segun etapas
+	atacante: array
+		dirección ip del atacante
+	carpetaSalida: string
+		carpeta de salida, donde se encuentran los archivos y donde se dejarán las imagenes
+	Returns
+	-------
+
+	"""
+
+	# Create figure and plot a stem plot with the date
+	fig, ax = plt.subplots(figsize=(18,8), constrained_layout=True)
+	ax.set(title="Línea de tiempo para ataques provenientes desde " + atacante)
+
+	#ax.vlines(dates, 0, levels, color="tab:red")  # The vertical stems.
+	ax.vlines(dates, 0, levels, color=colores)
+	ax.plot(dates, np.zeros_like(dates), "-o",
+	        color="k", markerfacecolor="w")  # Baseline and markers on it.
+
+	# annotate lines
+	for d, l, r in zip(dates, levels, names):
+		ax.annotate(r, xy=(d, l),
+								xytext=(-3, np.sign(l)*3), textcoords="offset points",
+								horizontalalignment="right",
+								verticalalignment="bottom" if l > 0 else "top")
+
+	# format xaxis with 4 month intervals
+	#ax.xaxis.set_major_locator(mdates.MonthLocator(interval=4))
+	#ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+	plt.setp(ax.get_xticklabels(), rotation=90, ha="right")
+
+	# remove y axis and spines
+	ax.yaxis.set_visible(False)
+	ax.spines[["left", "top", "right"]].set_visible(False)
+
+	ax.margins(y=0.1)
+	#plt.show()
+	file_atacante = atacante.replace(":", "-")
+	plt.savefig(carpetaSalida + 'time_line_atacante_' + total_alertas + "_" + file_atacante + '.svg', dpi=300, format='svg', bbox_inches='tight')
+	#plt.savefig(carpetaSalida + 'time_line_atacante_' + file_atacante + '.png', dpi=300, format='png', bbox_inches='tight')
+	plt.close()
 
 
 
-
-
-
-
-
+"""
+  FUNCION DESACTIVADA
 
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
-    """
-    Función obtenida desde https://medium.com/kenlok/how-to-create-sankey-diagrams-from-dataframes-in-python-e221c1b4d6b0
-    """
+    #
+    #  Función obtenida desde https://medium.com/kenlok/how-to-create-sankey-diagrams-from-dataframes-in-python-e221c1b4d6b0
+    #
     # maximum of 6 value cols -> 6 colors /  ['#4B8BBE','#306998','#FFE873','#FFD43B','#646464']
     colorPalette = ['#6ec7ff','#ffff5a','#fdad60','#d43d4f','#4B8BBE']
     labelList = []
@@ -315,3 +372,4 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
        
     fig = dict(data=[data], layout=layout)
     return fig
+"""
