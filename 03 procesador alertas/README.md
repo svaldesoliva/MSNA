@@ -2,6 +2,9 @@
 
 
 ## Requisitos
+### Python 3
+Probado con Python 3.8.5
+
 ### pygtail
 Obtenido desde https://pypi.org/project/pygtail/
 instalación: pip install pygtail
@@ -24,6 +27,11 @@ instalación: pip3 install plotly
 
 ### numpy 
 instalación: pip3 install numpy
+
+
+## Operación
+- Copiar archivo "alert.csv" con las alertas desde la salida de Snort
+- Ejecutar: python procesador_alertas.py
 
 <!---
 ## Notas adicionales
