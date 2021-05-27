@@ -1,31 +1,17 @@
 # Procesador de Alertas Snort
 
 
-## Requisitos
-### pygtail
-Obtenido desde https://pypi.org/project/pygtail/
-instalación: pip install pygtail
+## 01 extraer alertas
+Lee un directorio con los dataset y extrae un archivo de alertas (en CSV) por cada archivo de trama de red (PCAP)
 
-### pandas
-Homepage https://pandas.pydata.org/
-instalación: pip install pandas
+## 02 genera template de reglas clasificacion
+Genera un archivo vacío de clasificación, basado en las reglas de Snort, para iniciar la clasificación
 
-### progress
-Homepage https://github.com/verigak/progress/
-instalación: pip install progress
+## 03 procesador alertas
+Software que procesa las alertas Snort en CSV (01), con el archivo clasificación (02) ya editado
 
-### matplotlib
-Homepage https://matplotlib.org/
-instalación: pip install matplotlib
+## 04 docs
+Alguna documentación, o software que ayuda a generarla
 
-### plotly
-Homepage https://plotly.com/python/
-instalación: pip3 install plotly
-
-### numpy 
-instalación: pip3 install numpy
-
-<!---
-## Notas adicionales
-python-daemon - https://github.com/martinrusev/python-daemon/
--->
+### grafica
+Genera grafico de distribución Scatter de las alertas clasificadas

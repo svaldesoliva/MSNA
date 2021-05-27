@@ -15,4 +15,5 @@ lib/__pycache__/*
 tarea_manuel_cano.py
 *.offset
 sid_sin_clasificar.csv
-html/data/*
+03 procesador alertas/salida/*
+03 procesador alertas/alert.csv
