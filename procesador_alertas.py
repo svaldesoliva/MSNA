@@ -20,7 +20,7 @@ servicio=False
 
 
 # Carpeta web en donde se realizará la entrega de los datos
-carpetaSalida = "html/data/"
+carpetaSalida = "salida" #"html/data/"
 
 #################################################################
 # Software
@@ -113,8 +113,8 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 
 	if not servicio:
 		bar1.finish()
-
-	 # Operacion final
+	#""
+	# Operacion final
 	repositorioAlertasClasificadas.to_csv(carpetaSalida + "alertas_clasificadas.csv",encoding="latin-1",sep=";", index=False)
 
 	indicadores_atacantes.sort_values(['Etapa 1'], ascending=[False])
@@ -134,9 +134,10 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 
 	#https://www.delftstack.com/es/howto/matplotlib/pandas-plot-multiple-columns-on-bar-chart-matplotlib/
 	#http://bl.ocks.org/ndarville/7075823
-	#"
 
-	lib.procesa.generaGraficos( "indicadores_atacantes.csv", "indicadores_hosts.csv",  "indicadores_detalle.csv", carpetaSalida )
+	if not servicio:
+		print("Generando graficos")
+	lib.procesa.generaGraficos( "indicadores_atacantes.csv", "indicadores_hosts.csv",  "indicadores_detalle.csv", "alertas_clasificadas.csv", carpetaSalida )
 
 	#""
 
