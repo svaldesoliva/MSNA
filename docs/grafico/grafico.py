@@ -49,6 +49,16 @@ print(formula1)
 [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,0,0,8,0,0,13,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1,0,0,0]
 [14,0,5,1,6,5,1,1,2,3,1,1,1,9,2,3,1,8,1,135,334,25,37,13,16,80,0,33,0,0,32,11,0,111,12,297,0,0,3,18,30,2,0,0,40,2,22,5,4,0,14,7,8,5,18,27,0]
 [2,76,1,0,0,1,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,7,87,0,0,0,1,0,0,0,0,0,3,2,0,0,19,1,0,0,0,0,0,42,0,0,1,0,0,1,0,0,0,0,0,0,2]
+
+
+v2
+["attack-responses.rules","backdoor.rules","bad-traffic.rules","chat.rules","community-deleted.rules","community-dos.rules","community-exploit.rules","community-game.rules","community-icmp.rules","community-imap.rules","community-misc.rules","community-nntp.rules","community-sip.rules","community-smtp.rules","community-sql-injection.rules","community-virus.rules","community-web-attacks.rules","community-web-cgi.rules","community-web-client.rules","community-web-iis.rules","community-web-misc.rules","community-web-php.rules","ddos.rules","deleted.rules","dns.rules","dos.rules","exploit.rules","finger.rules","ftp.rules","icmp.rules","icmp-info.rules","imap.rules","info.rules","misc.rules","mysql.rules","netbios.rules","nntp.rules","oracle.rules","p2p.rules","policy.rules","pop2.rules","pop3.rules","rpc.rules","rservices.rules","scan.rules","shellcode.rules","smtp.rules","snmp.rules","sql.rules","telnet.rules","tftp.rules","virus.rules","web-attacks.rules","web-cgi.rules","web-client.rules","web-iis.rules","web-misc.rules"]
+[0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,22,93,0,1,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0]
+[1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,0,0,8,0,0,13,0,0,0,0,5,0,0,4,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,9,27,1,1,4]
+[14,0,5,0,1,6,5,1,1,2,3,1,1,1,9,2,3,1,8,1,135,334,25,37,13,16,80,0,33,0,0,32,0,11,3,112,12,297,0,0,3,18,31,2,0,0,40,3,22,5,4,0,15,7,8,5,18]
+[2,76,1,1,0,0,1,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,7,87,0,0,0,1,0,0,0,0,0,1,0,2,0,0,19,1,0,0,0,0,0,42,0,0,1,0,0,1,0,1,0,0,0]
+
+
 """
 
 #Paso 1
@@ -66,26 +76,26 @@ for x in range(57):
 #x1 = ["p1","p1","p1"]
 x1 = ["attack-responses","backdoor","bad-traffic","community-deleted","community-dos","community-exploit","community-game","community-icmp","community-imap","community-misc","community-nntp","community-sip","community-smtp","community-sql-injection","community-virus","community-web-attacks","community-web-cgi","community-web-client","community-web-iis","community-web-misc","community-web-php","ddos","deleted","dns","dos","exploit","finger","ftp","icmp","icmp-info","imap","misc","mysql","netbios","nntp","oracle","p2p","policy","pop2","pop3","rpc","rservices","scan","shellcode","smtp","snmp","sql","telnet","tftp","virus","web-attacks","web-cgi","web-client","web-iis","web-misc","web-php","x11"]
 #s1 = [100, 100,100]
-s1 = [0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,22,93,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
+s1 = [0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,22,93,0,1,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0]
 #c1 = ["green", "yellow","orange"]
 c1 = "orange" #"green"
 m1 = "o" #"s"
 
 #Paso 2
 x2 = x1
-s2 = [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,0,0,8,0,0,13,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1,0,0,0]
+s2 = [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,0,0,8,0,0,13,0,0,0,0,5,0,0,4,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,9,27,1,1,4]
 c2 = "orange" #"yellow"
 m2 = "o" #"^"
 
 #Paso 3
 x3 = x1
-s3 = [14,0,5,1,6,5,1,1,2,3,1,1,1,9,2,3,1,8,1,135,334,25,37,13,16,80,0,33,0,0,32,11,0,111,12,297,0,0,3,18,30,2,0,0,40,2,22,5,4,0,14,7,8,5,18,27,0]
+s3 = [14,0,5,0,1,6,5,1,1,2,3,1,1,1,9,2,3,1,8,1,135,334,25,37,13,16,80,0,33,0,0,32,0,11,3,112,12,297,0,0,3,18,31,2,0,0,40,3,22,5,4,0,15,7,8,5,18]
 c3 = "orange" #
 m3 = "o" #"o"
 
 #Paso 4
 x4 = x1
-s4 = [2,76,1,0,0,1,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,7,87,0,0,0,1,0,0,0,0,0,3,2,0,0,19,1,0,0,0,0,0,42,0,0,1,0,0,1,0,0,0,0,0,0,2]
+s4 = [2,76,1,1,0,0,1,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,7,87,0,0,0,1,0,0,0,0,0,1,0,2,0,0,19,1,0,0,0,0,0,42,0,0,1,0,0,1,0,1,0,0,0]
 c4 = "orange" #"red"
 m4 = "o" #"x"
 
