@@ -20,7 +20,7 @@ servicio=False
 
 
 # Carpeta web en donde se realizará la entrega de los datos
-carpetaSalida = "salida" #"html/data/"
+carpetaSalida = "salida/" #"html/data/"
 
 #################################################################
 # Software
