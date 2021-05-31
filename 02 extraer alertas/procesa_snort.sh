@@ -3,10 +3,6 @@
 #Nadie mas escribiendo en snort
 service snort stop
 
-# No datos previos
-rm -f /var/log/snort/snort.log
-rm -f /var/log/snort/alert.csv
-
 #archivos borrados, no es necesario
 #snort -c /etc/snort/snort.conf --pcap-dir=./ --pcap-reset
 
