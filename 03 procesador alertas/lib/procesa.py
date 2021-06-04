@@ -19,6 +19,7 @@ import plotly
 import numpy as np
 #from datetime import datetime
 #import matplotlib.dates as mdates
+import math
 
 
 def generaIndicadores(alertaClasificada, indicadores_atacantes, indicadores_hosts, indicadores_detalle):
@@ -111,10 +112,20 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
 	alertas_clasificadas = pd.read_csv(carpetaSalida + archivo_clasificadas,encoding="latin-1",sep=";")
 	
+
+	#proporcion 8 alto por 11 atacantes, minimo 5
+	alto_hosts=math.trunc( 8 * len(indicadores_hosts.index) / 11)
+	if ( alto_hosts < 2 ):
+		alto_hosts = 2
+
+	alto_atacantes=math.trunc( 8 * len(indicadores_atacantes.index) / 11)
+	if ( alto_atacantes < 2 ):
+		alto_atacantes = 2
+
 	#
 	# Graficos por Atacante
 	#    
-	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
+	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,alto_atacantes), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
 	#plt.legend(loc="lower left",bbox_to_anchor=(0.8,0.95))   # ["#fedf8b","#fdad60","#f46c43","#d43d4f" / #3387bc
 	plt.title('Ataques recibidos por atacante')
 	plt.xlabel('Cantidad de ataques')
@@ -125,7 +136,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 
 
 	# escala logaritmica
-	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=True, color=["#6ec7ff","#ffff5a","#fdad60","#d43d4f"])
+	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,alto_atacantes), fontsize=6, log=True, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
 	plt.title('Ataques recibidos por atacante (escala logaritmica)')
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('Atacante')
@@ -137,7 +148,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#
 	# Graficos por Host
 	#    
-	indicadores_hosts.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
+	indicadores_hosts.plot.barh(stacked = True, figsize=(10,alto_hosts), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
 	#plt.legend(loc="lower left",bbox_to_anchor=(0.8,0.95))   # ["#fedf8b","#fdad60","#f46c43","#d43d4f" / #3387bc
 	plt.title('Ataques recibidos por host')
 	plt.xlabel('Cantidad de ataques')
@@ -147,7 +158,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	plt.close()
 
 	# escala logaritmica
-	indicadores_hosts.plot.barh(stacked = True, figsize=(10,8), fontsize=6, log=True, color=["#6ec7ff","#ffff5a","#fdad60","#d43d4f"])
+	indicadores_hosts.plot.barh(stacked = True, figsize=(10,alto_hosts), fontsize=6, log=True, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
 	plt.title('Ataques recibidos por host (escala logaritmica)')
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('hosts')
@@ -180,69 +191,83 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	
 	#alertas_etapa4=alertas_clasificadas.query("Etapa == 4").groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
 	alertas_interes0=alertas_clasificadas.groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
-	
 	#por problemas de memoria nos centramos en graficos mas interesantes
 	alertas_etapa4=alertas_interes0.query("Total > 10") #no muy ambiciooso mas de 5 alertas
 	alertas_etapa4 = alertas_etapa4.reset_index()
-	alertas_interes0=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
+	#print(alertas_etapa4)
+	alertas_interes0=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio, ahorro de RAM
 
 	for index, row in alertas_etapa4.iterrows():
-		alertas_interes=alertas_clasificadas.query("Remoto == '" + str(row['Remoto']) + "'")
 
-		cantidad = [] 
-		fechahora = []
-		etapas = []
-		contadormaximo = 0
-		etapa = -1 #inicial
-		nombres = []
-		for index2, row2 in alertas_interes.iterrows():
-			if ( etapa == -1 or etapa != row2['Etapa']): #Inicial o cambio de etapa, a reiniciar variables
-				if ( etapa != -1 ): # Es cambio de etapa, hacemos el registro
-					cantidad.append(contador)
-					nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
-					fechahora.append(inicio)
-					if (etapa == 1): 
-						etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
-					if (etapa == 2):
-						etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
-					if (etapa == 3):
-						etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
-					if (etapa == 4):
-						etapas.append([212/255, 61/255, 79/255]) #d43d4f - rojo
+		alertas_interes1=alertas_clasificadas.query("Remoto == '" + str(row['Remoto']) + "'")
 
-					if ( contador > contadormaximo ):
-						contadormaximo = contador
-				etapa = row2['Etapa'] #nueva etapa
-				contador = 1 # actual alerta
-				inicio = row2['timestamp'] #row2['timestamp'].split(".",1)[0] #momento del cambio de estado
-			else: #comun, seguimos en la misma etapa
-				contador = contador + 1 #conteo dentro de la misma etapa
+		alertas_local = alertas_interes1.groupby('Local').agg( {"Local":"count"}).rename(columns={'Local': 'Total'})
+		alertas_local = alertas_local.reset_index()
 
-		# Última etapa, hacemos el registro
-		cantidad.append(contador)
-		nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
-		fechahora.append(inicio)
-		if (etapa == 1): 
-			etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
-		if (etapa == 2):
-			etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
-		if (etapa == 3):
-			etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
-		if (etapa == 4):
-			etapas.append([212/255, 61/255, 79/255]) #d43d4f - rojo
+		for index3, row3 in alertas_local.iterrows():
 
-		if ( contador > contadormaximo ):
-			contadormaximo = contador
+			alertas_interes=alertas_clasificadas.query("Remoto == '" + str(row['Remoto']) + "' and Local == '" + str(row3['Local']) + "'")
 
-		niveles = []
-		signo = -1
-		for v in cantidad:
-			signo = -1 * signo
-			niveles.append(signo * 0.05 * v / contadormaximo )
+			#print("alertas_interes")
+			#print(alertas_interes)
 
-		generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto']), carpetaSalida, str(row['Total']) )
-	
-		alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
+			cantidad = [] 
+			fechahora = []
+			etapas = []
+			contadormaximo = 0
+			etapa = -1 #inicial
+			nombres = []
+			cuantas_etapas = 0
+			for index2, row2 in alertas_interes.iterrows():
+				if ( etapa == -1 or etapa != row2['Etapa']): #Inicial o cambio de etapa, a reiniciar variables
+					if ( etapa != -1 ): # Es cambio de etapa, hacemos el registro
+						cantidad.append(contador)
+						nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
+						fechahora.append(inicio)
+						if (etapa == 1): 
+							etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
+						if (etapa == 2):
+							etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
+						if (etapa == 3):
+							etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
+						if (etapa == 4):
+							etapas.append([200/255, 30/255, 30/255]) #d43d4f - rojo
+
+						if ( contador > contadormaximo ):
+							contadormaximo = contador
+					etapa = row2['Etapa'] #nueva etapa
+					contador = 1 # actual alerta
+					inicio = row2['timestamp'] #row2['timestamp'].split(".",1)[0] #momento del cambio de estado
+					cuantas_etapas = cuantas_etapas + 1
+				else: #comun, seguimos en la misma etapa
+					contador = contador + 1 #conteo dentro de la misma etapa
+
+			# Última etapa, hacemos el registro
+			cantidad.append(contador)
+			nombres.append(str(contador) + ' (Etapa ' + str(etapa) + ')')
+			fechahora.append(inicio)
+			if (etapa == 1): 
+				etapas.append([110/255, 199/255, 255/255]) #6ec7ff - celeste
+			if (etapa == 2):
+				etapas.append([254/255, 223/255, 139/255]) #fedf8b - amarillo
+			if (etapa == 3):
+				etapas.append([244/255, 108/255, 67/255]) #f46c43 - naranja
+			if (etapa == 4):
+				etapas.append([200/255, 30/255, 30/255]) #d43d4f - rojo  // 212/255, 61/255, 79/255
+
+			if ( contador > contadormaximo ):
+				contadormaximo = contador
+
+			niveles = []
+			signo = -1
+			for v in cantidad:
+				signo = -1 * signo
+				niveles.append(signo * 0.05 * v / contadormaximo )
+
+			if ( cuantas_etapas > 1 ):
+				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']) )
+		
+			alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
 
 
 def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total_alertas ):
@@ -272,7 +297,7 @@ def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total
 
 	# Create figure and plot a stem plot with the date
 	fig, ax = plt.subplots(figsize=(18,8), constrained_layout=True)
-	ax.set(title="Línea de tiempo para ataques provenientes desde " + atacante)
+	ax.set(title="Línea de tiempo para ataques de " + atacante)
 
 	#ax.vlines(dates, 0, levels, color="tab:red")  # The vertical stems.
 	ax.vlines(dates, 0, levels, color=colores)
@@ -293,7 +318,10 @@ def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total
 
 	# remove y axis and spines
 	ax.yaxis.set_visible(False)
-	ax.spines[["left", "top", "right"]].set_visible(False)
+	#sax.spines[["left", "top", "right"]].set_visible(False) #da error en algunas implementaciones
+	ax.spines['top'].set_visible(False)
+	ax.spines['right'].set_visible(False)
+	ax.spines['left'].set_visible(False)
 
 	ax.margins(y=0.1)
 	#plt.show()
