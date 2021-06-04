@@ -39,7 +39,7 @@ def separa(linea):
 	return(fila)
 
 
-def clasifica(alerta, clasificacion):
+def clasifica(alerta, clasificacion, repositorioAlertasClasificadas):
 	"""
 	Recibe una alerta, y la clasifica segun tipo de alerta y etapa CKC. 
 
@@ -52,6 +52,8 @@ def clasifica(alerta, clasificacion):
 	clasificacion : Dataframe
 		Panda Dataframe que contiene los tipos de alerta definidos, que incluye el SID y la etapa de CKC correspondiente.
 		campos del CSV de clasificacion: SID, Etapa, Subetapa, Observaciones, archivo, alerta 
+	repositorioAlertasClasificadas: Dataframe
+		Colección de alertas ya guardadas, aquí obtenemos la historia para reclasificar
 	Returns
 	-------
 	AlertaClasificada: Dataframe or None
@@ -79,6 +81,32 @@ def clasifica(alerta, clasificacion):
 			else: # 1 -> origen = local / estino = remoto  ///  
 				remoto = alerta[6]
 				local = alerta[8]
+
+			# Excepciones que sacan provecho a la identificación del avance por etapa:
+
+			# Si esta etapa es 2.1 (conexion existosa, sin problemas) y 
+			# existió anteriormente un ataque (3.1) que de ser exitoso puede haber dado acceso  ==> etapa 4: server comprometido
+			if ( etapa == 2 and subetapa == 1 ):
+				resultado_ataques_previos1=repositorioAlertasClasificadas.query(
+										"Remoto == '" + remoto + "' and " + 
+										"Local == '" + local + "' and " +
+										"Etapa == 3 and Subetapa == 1 " )
+				if ( len(resultado_ataques_previos1.index) >0 ):
+					etapa = 4
+					subetapa = 10 # indicador de calculado
+
+			# Si esta etapa es 2.1 (conexion existosa, sin problemas) y 
+			# existieron anteriormente multiples un ataques tipo 3, que de ser exitoso puede haber dado acceso  ==> etapa 4: server comprometido
+			if ( etapa == 2 and subetapa == 1 ):
+				resultado_ataques_previos1=repositorioAlertasClasificadas.query(
+										"Remoto == '" + remoto + "' and " + 
+										"Local == '" + local + "' and " +
+										"Etapa == 3  " )
+				if ( len(resultado_ataques_previos1.index) > 4 ): # 5 o más no puede ser coincidencia
+					etapa = 4
+					subetapa = 11 # indicador de calculado
+
+
 			AlertaClasificada = pd.DataFrame({	'timestamp': alerta[0],
 										'SID': alerta[2],
 										'Etapa': etapa,
