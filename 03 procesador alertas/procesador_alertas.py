@@ -64,6 +64,11 @@ def start():
 			run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 			time.sleep(5) # en segundos
 	else:
+		total_reglas = len(clasificacion.index) 
+		alertas_conClasificacionUtil=clasificacion.query("Etapa==1 or Etapa==2 or Etapa==3 or Etapa==4")
+		total_reglasUtil = len(alertas_conClasificacionUtil.index)
+		alertas_conClasificacionUtil=pd.DataFrame() #vaciamos el resultado
+		print("Reglas: " + str(total_reglasUtil) + "/" + str(total_reglas))
 		# Si no es servicio, reiniciamos la lectura de las alertas
 		if os.path.exists( archivoAlertas + ".offset"):
 			os.remove( archivoAlertas + ".offset")
@@ -95,7 +100,7 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 			f = open(archivoAlertas, 'r')
 			operaciones=len(f.readlines())
 			f.close()
-			bar1 = Bar('Procesando:', max=operaciones, suffix = ' %(index)d/%(max)d - remanente %(eta)ds ')
+			bar1 = Bar('Procesando:', max=operaciones, suffix = ' %(index)d/%(max)d - remanente %(eta)ds   ')
 		contadorGrupo = 0
 		# Leer y procesa linea a linea. Pygtail solo lee lineas (alertas) nuevas	
 		for linea in Pygtail( archivoAlertas ):
