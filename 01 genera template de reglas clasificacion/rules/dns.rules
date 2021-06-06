@@ -1,3 +1,24 @@
+# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
+#
+# This file contains (i) proprietary rules that were created, tested and certified by
+# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
+# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
+# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
+# GNU General Public License (GPL), v2.
+# 
+# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
+# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
+# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
+# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
+# list of third party owners and their respective copyrights.
+# 
+# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
+# to the VRT Certified Rules License Agreement (v2.0).
+#
+#-----------
+# DNS RULES
+#-----------
+
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -48,7 +69,7 @@ alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS EXPLOIT x86 Linux overflow
 alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS EXPLOIT x86 Linux overflow attempt ADMv2"; flow:to_server,established; content:"|89 F7 29 C7 89 F3 89 F9 89 F2 AC|<|FE|"; classtype:attempted-admin; sid:265; rev:7;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS EXPLOIT x86 FreeBSD overflow attempt"; flow:to_server,established; content:"|EB|n^|C6 06 9A|1|C9 89|N|01 C6|F|05|"; classtype:attempted-admin; sid:266; rev:6;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS EXPLOIT sparc overflow attempt"; flow:to_server,established; content:"|90 1A C0 0F 90 02| |08 92 02| |0F D0 23 BF F8|"; classtype:attempted-admin; sid:267; rev:5;)
-# alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS TCP inverse query"; flow:to_server,established; byte_test:1,<,16,2; byte_test:1,&,8,2; reference:bugtraq,2302; reference:cve,2001-0010; classtype:attempted-recon; sid:2922; rev:1;)
-# alert udp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS UDP inverse query"; byte_test:1,<,16,2; byte_test:1,&,8,2; reference:bugtraq,2302; reference:cve,2001-0010; classtype:attempted-recon; sid:2921; rev:1;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS TCP inverse query"; flow:to_server,established; byte_test:1,<,16,2; byte_test:1,&,8,2; reference:bugtraq,2302; reference:cve,2001-0010; classtype:attempted-recon; sid:2922; rev:1;)
+alert udp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS UDP inverse query"; byte_test:1,<,16,2; byte_test:1,&,8,2; reference:bugtraq,2302; reference:cve,2001-0010; classtype:attempted-recon; sid:2921; rev:1;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS TCP inverse query overflow"; flow:to_server,established; byte_test:1,<,16,4; byte_test:1,&,8,4; isdataat:400; reference:bugtraq,134; reference:cve,1999-0009; classtype:attempted-admin; sid:3153; rev:2;)
 alert udp $EXTERNAL_NET any -> $HOME_NET 53 (msg:"DNS UDP inverse query overflow"; byte_test:1,<,16,2; byte_test:1,&,8,2; isdataat:400; reference:bugtraq,134; reference:cve,1999-0009; classtype:attempted-admin; sid:3154; rev:2;)

@@ -1,3 +1,24 @@
+# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
+#
+# This file contains (i) proprietary rules that were created, tested and certified by
+# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
+# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
+# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
+# GNU General Public License (GPL), v2.
+# 
+# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
+# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
+# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
+# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
+# list of third party owners and their respective copyrights.
+# 
+# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
+# to the VRT Certified Rules License Agreement (v2.0).
+#
+#-----------
+# RPC RULES
+#-----------
+
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -25,7 +46,7 @@
 
 ## bleck.  Not happy about this.  because of the non-rule ordering foo, I'm
 ## checking the first byte in the version, which should always be 0.  When we
-## alert multiple times on a packet, I'll put these rules back to:
+##_ alert multiple times on a packet, I'll put these rules back to:
 ##   content:"|0a 01 86 a0|"; offset:16; depth:4; content:"|00 00 00 05|";
 ##    distance:4; within:4;
 alert tcp $EXTERNAL_NET any -> $HOME_NET 111 (msg:"RPC portmap proxy integer overflow attempt TCP"; flow:to_server,established; content:"|00 01 86 A0 00|"; depth:5; offset:16; content:"|00 00 00 05|"; within:4; distance:3; byte_jump:4,4,relative,align; byte_jump:4,4,relative,align; byte_test:4,>,2048,12,relative; content:"|00 00 00 00|"; depth:4; offset:8; reference:bugtraq,7123; reference:cve,2003-0028; classtype:rpc-portmap-decode; sid:2093; rev:5;)
@@ -178,7 +199,7 @@ alert udp $EXTERNAL_NET any -> $HOME_NET any (msg:"RPC tooltalk UDP overflow att
 alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"RPC tooltalk TCP overflow attempt"; flow:to_server,established; content:"|00 01 86 F3|"; depth:4; offset:16; content:"|00 00 00 07|"; within:4; distance:4; byte_jump:4,4,relative,align; byte_jump:4,4,relative,align; byte_test:4,>,128,0,relative; content:"|00 00 00 00|"; depth:4; offset:8; reference:bugtraq,122; reference:cve,1999-0003; classtype:misc-attack; sid:1965; rev:8;)
 
 # not sure what this rule is looking for, other than the procedure 15
-# alert tcp $EXTERNAL_NET any -> $HOME_NET 32771:34000 (msg:"RPC DOS ttdbserv Solaris"; flow:to_server,established; content:"|00 00 00 00|"; depth:4; offset:8; content:"|00 01 86 F3 00 00 00 01 00 00 00 0F 00 00 00 01|"; depth:32; offset:16; reference:arachnids,241; reference:bugtraq,122; reference:cve,1999-0003; classtype:attempted-dos; sid:572; rev:9;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 32771:34000 (msg:"RPC DOS ttdbserv Solaris"; flow:to_server,established; content:"|00 00 00 00|"; depth:4; offset:8; content:"|00 01 86 F3 00 00 00 01 00 00 00 0F 00 00 00 01|"; depth:32; offset:16; reference:arachnids,241; reference:bugtraq,122; reference:cve,1999-0003; classtype:attempted-dos; sid:572; rev:9;)
 
 
 alert udp $EXTERNAL_NET any -> $HOME_NET 111 (msg:"RPC portmap yppasswd request UDP"; content:"|00 01 86 A0|"; depth:4; offset:12; content:"|00 00 00 03|"; within:4; distance:4; byte_jump:4,4,relative,align; byte_jump:4,4,relative,align; content:"|00 01 86 A9|"; within:4; content:"|00 00 00 00|"; depth:4; offset:4; reference:arachnids,14; classtype:rpc-portmap-decode; sid:589; rev:8;)

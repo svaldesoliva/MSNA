@@ -1,3 +1,24 @@
+# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
+#
+# This file contains (i) proprietary rules that were created, tested and certified by
+# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
+# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
+# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
+# GNU General Public License (GPL), v2.
+# 
+# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
+# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
+# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
+# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
+# list of third party owners and their respective copyrights.
+# 
+# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
+# to the VRT Certified Rules License Agreement (v2.0).
+#
+#------------
+# POP3 RULES
+#------------
+
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -43,7 +64,7 @@ alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 EXPLOIT x86 Linux overfl
 alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 EXPLOIT x86 SCO overflow"; flow:to_server,established; content:"V|0E|1|C0 B0 3B 8D|~|12 89 F9 89 F9|"; reference:bugtraq,156; reference:cve,1999-0006; classtype:attempted-admin; sid:289; rev:9;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 EXPLOIT qpopper overflow"; flow:to_server,established; content:"|E8 D9 FF FF FF|/bin/sh"; reference:bugtraq,830; reference:cve,1999-0822; reference:nessus,10184; classtype:attempted-admin; sid:290; rev:9;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 USER format string attempt"; flow:to_server,established; content:"USER"; nocase; pcre:"/^USER\s+[^\n]*?%/smi"; reference:bugtraq,10976; reference:bugtraq,7667; reference:cve,2003-0391; reference:nessus,11742; classtype:attempted-admin; sid:2250; rev:5;)
-# alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 login brute force attempt"; flow:to_server,established; content:"USER"; nocase; threshold:type threshold, track by_dst, count 30, seconds 30; classtype:suspicious-login; sid:2274; rev:2;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 login brute force attempt"; flow:to_server,established; content:"USER"; nocase; threshold:type threshold, track by_dst, count 30, seconds 30; classtype:suspicious-login; sid:2274; rev:2;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"POP3 APOP USER overflow attempt"; flow:to_server,established; content:"APOP"; nocase; isdataat:256,relative; pcre:"/^APOP\s+USER\s[^\n]{256}/smi"; reference:bugtraq,9794; classtype:attempted-admin; sid:2409; rev:1;)
 
 alert tcp $EXTERNAL_NET any -> $HOME_NET 995 (msg:"POP3 SSLv3 invalid timestamp attempt"; flow:to_server,established; content:"|16 03|"; depth:2; content:"|01|"; depth:1; offset:5; byte_test:4,>,2147483647,5,relative; reference:bugtraq,10115; reference:cve,2004-0120; reference:nessus,12204; reference:url,www.microsoft.com/technet/security/bulletin/MS04-011.mspx; classtype:attempted-dos; sid:2501; rev:10;)
