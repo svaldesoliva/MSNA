@@ -64,7 +64,7 @@ def clasifica(alerta, clasificacion, repositorioAlertasClasificadas):
 	clasificacionAlerta=clasificacion.query("SID == " + alerta[2])
 
 	# Busqueda existosa, y no viene vacío
-	if len(clasificacionAlerta.index) >0 and not math.isnan(clasificacionAlerta['Etapa'] ):
+	if (len(clasificacionAlerta.index) >0 and not math.isnan(clasificacionAlerta['Etapa']) and clasificacionAlerta['Etapa'].item()!=0):
 
 		####clasificacionAlerta["Etapa"][clasificacionAlerta.index].astype('int32')
 		etapa = int(clasificacionAlerta["Etapa"].item())
