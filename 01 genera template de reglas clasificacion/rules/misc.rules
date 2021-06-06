@@ -1,24 +1,3 @@
-# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
-#
-# This file contains (i) proprietary rules that were created, tested and certified by
-# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
-# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
-# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
-# GNU General Public License (GPL), v2.
-# 
-# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
-# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
-# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
-# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
-# list of third party owners and their respective copyrights.
-# 
-# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
-# to the VRT Certified Rules License Agreement (v2.0).
-#
-#------------
-# MISC RULES
-#------------
-
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -56,8 +35,8 @@ alert udp $EXTERNAL_NET any -> $HOME_NET 177 (msg:"MISC xdmcp query"; content:"|
 
 # once we get response, check for content:"|00 01 00|"; offset:0; depth:3;
 alert udp $EXTERNAL_NET any -> $HOME_NET 177 (msg:"MISC xdmcp info query"; content:"|00 01 00 02 00 01 00|"; reference:nessus,10891; classtype:attempted-recon; sid:1867; rev:1;)
-alert udp $EXTERNAL_NET any -> $HOME_NET any (msg:"MISC Large UDP Packet"; dsize:>4000; reference:arachnids,247; classtype:bad-unknown; sid:521; rev:2;)
-alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"MISC Tiny Fragments"; dsize:< 25; fragbits:M; classtype:bad-unknown; sid:522; rev:3;)
+# alert udp $EXTERNAL_NET any -> $HOME_NET any (msg:"MISC Large UDP Packet"; dsize:>4000; reference:arachnids,247; classtype:bad-unknown; sid:521; rev:2;)
+# alert ip $EXTERNAL_NET any -> $HOME_NET any (msg:"MISC Tiny Fragments"; dsize:< 25; fragbits:M; classtype:bad-unknown; sid:522; rev:3;)
 alert udp $EXTERNAL_NET any -> $HOME_NET 1900 (msg:"MISC UPnP malformed advertisement"; content:"NOTIFY * "; nocase; reference:bugtraq,3723; reference:cve,2001-0876; reference:cve,2001-0877; reference:url,www.microsoft.com/technet/security/bulletin/MS01-059.mspx; classtype:misc-attack; sid:1384; rev:8;)
 alert udp $EXTERNAL_NET any -> $HOME_NET 1900 (msg:"MISC UPnP Location overflow"; content:"Location|3A|"; nocase; pcre:"/^Location\:[^\n]{128}/smi"; reference:bugtraq,3723; reference:cve,2001-0876; classtype:misc-attack; sid:1388; rev:12;)
 alert tcp $AIM_SERVERS any -> $HOME_NET any (msg:"MISC AIM AddGame attempt"; flow:to_client,established; content:"aim|3A|AddGame?"; nocase; reference:bugtraq,3769; reference:cve,2002-0005; reference:url,www.w00w00.org/files/w00aimexp/; classtype:misc-attack; sid:1393; rev:12;)

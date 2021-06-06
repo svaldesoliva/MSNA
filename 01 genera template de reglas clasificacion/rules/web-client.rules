@@ -1,24 +1,3 @@
-# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
-#
-# This file contains (i) proprietary rules that were created, tested and certified by
-# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
-# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
-# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
-# GNU General Public License (GPL), v2.
-# 
-# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
-# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
-# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
-# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
-# list of third party owners and their respective copyrights.
-# 
-# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
-# to the VRT Certified Rules License Agreement (v2.0).
-#
-#------------------
-# WEB-CLIENT RULES
-#------------------
-
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -62,9 +41,9 @@ alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT local reso
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT Content-Disposition CLSID command attempt"; flow:to_client,established; content:"Content-Disposition|3A|"; nocase; pcre:"/^Content-Disposition\x3a[^\r\n]*\{[\da-fA-F]{8}(-[\da-fA-F]{4}){3}-[\da-fA-F]{12}\}/smi"; reference:bugtraq,9510; reference:cve,2004-0420; reference:url,www.microsoft.com/technet/security/bulletin/ms04-024.mspx; classtype:attempted-user; sid:2589; rev:3;)
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT libpng tRNS overflow attempt"; flow:to_client,established; content:"|89|PNG|0D 0A 1A 0A|"; content:"IHDR"; within:4; distance:4; content:"tRNS"; distance:0; byte_test:4,>,256,-8,relative,big; pcre:"/IHDR(?!.*?PLTE).*?tRNS/s"; reference:bugtraq,10872; reference:cve,2004-0597; classtype:attempted-user; sid:2673; rev:4;)
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT bitmap BitmapOffset integer overflow attempt"; flow:to_client,established; content:"image/bmp"; nocase; pcre:"/^Content-type\x3a\s*image\x2fbmp/smi"; pcre:"/^BM/sm"; byte_test:4,>,2147480000,8,relative,little; reference:bugtraq,9663; reference:cve,2004-0566; classtype:attempted-user; sid:2671; rev:4;)
-alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG parser heap overflow attempt"; flow:from_server,established; content:"image/"; nocase; pcre:"/^Content-Type\s*\x3a\s*image\x2fp?jpe?g.*\xFF\xD8.{2}.*\xFF[\xE1\xE2\xED\xFE]\x00[\x00\x01]/smi"; reference:bugtraq,11173; reference:cve,2004-0200; reference:url,www.microsoft.com/security/bulletins/200409_jpeg.mspx; classtype:attempted-admin; sid:2705; rev:4;)
-alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG transfer"; flow:from_server,established; content:"image/"; nocase; pcre:"/^Content-Type\s*\x3a\s*image\x2fp?jpe?g/smi"; flowbits:set,http.jpeg; flowbits:noalert; classtype:protocol-command-decode; sid:2706; rev:2;)
-alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG parser multipacket heap overflow"; flow:from_server,established; flowbits:isset,http.jpeg; content:"|FF|"; pcre:"/\xFF[\xE1\xE2\xED\xFE]\x00[\x00\x01]/"; reference:bugtraq,11173; reference:cve,2004-0200; reference:url,www.microsoft.com/security/bulletins/200409_jpeg.mspx; classtype:attempted-admin; sid:2707; rev:2;)
+# alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG parser heap overflow attempt"; flow:from_server,established; content:"image/"; nocase; pcre:"/^Content-Type\s*\x3a\s*image\x2fp?jpe?g.*\xFF\xD8.{2}.*\xFF[\xE1\xE2\xED\xFE]\x00[\x00\x01]/smi"; reference:bugtraq,11173; reference:cve,2004-0200; reference:url,www.microsoft.com/security/bulletins/200409_jpeg.mspx; classtype:attempted-admin; sid:2705; rev:4;)
+# alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG transfer"; flow:from_server,established; content:"image/"; nocase; pcre:"/^Content-Type\s*\x3a\s*image\x2fp?jpe?g/smi"; flowbits:set,http.jpeg; flowbits:noalert; classtype:protocol-command-decode; sid:2706; rev:2;)
+# alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT JPEG parser multipacket heap overflow"; flow:from_server,established; flowbits:isset,http.jpeg; content:"|FF|"; pcre:"/\xFF[\xE1\xE2\xED\xFE]\x00[\x00\x01]/"; reference:bugtraq,11173; reference:cve,2004-0200; reference:url,www.microsoft.com/security/bulletins/200409_jpeg.mspx; classtype:attempted-admin; sid:2707; rev:2;)
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT Microsoft ANI file parsing overflow"; flow:established,from_server; content:"RIFF"; nocase; content:"anih"; nocase; byte_test:4,>,36,0,relative,little; reference:cve,2004-1049; classtype:attempted-user; sid:3079; rev:3;)
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT winamp .cda file name overflow attempt"; flow:from_server,established; content:".cda"; nocase; pcre:"/(\x5c[^\x5c]{16,}|\x2f[^\x2f]{16,})\.cda$/smi"; reference:bugtraq,11730; classtype:attempted-user; sid:3088; rev:1;)
 alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any (msg:"WEB-CLIENT PNG large image width download attempt"; flow:from_server,established; content:"|89|PNG|0D 0A 1A 0A|"; content:"IHDR"; within:8; byte_test:4,>,32768,0,relative; reference:bugtraq,11523; reference:cve,2004-0990; reference:cve,2004-1244; reference:url,www.microsoft.com/technet/security/bulletin/MS05-009.mspx; classtype:attempted-user; sid:3132; rev:3;)

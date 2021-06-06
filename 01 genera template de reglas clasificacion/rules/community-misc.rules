@@ -10,7 +10,7 @@ alert tcp any any -> any !139 (msg:"COMMUNITY MISC BAD-SSL tcp detect"; flow:sta
 #Rules submitted by Thierry Chich
 alert tcp any any -> any any (msg:"COMMUNITY MISC streaming RTSP - realplayer"; flow:established; content:"PLAY rtsp|3A 2F 2F|"; depth: 12; classtype:policy-violation; reference:url,www.rtsp.org; sid:100000189; rev:2;)
 alert tcp any any -> any any (msg:"COMMUNITY MISC streaming Windows Mediaplayer"; flow:established; content:"|01 00 00 00 ce fa 0b b0|"; depth: 8; content:"MMS"; distance:4; within:4; classtype:policy-violation; reference:url,www.microsoft.com; sid:100000190; rev:2;)
-alert udp $EXTERNAL_NET 1023: -> $HOME_NET 123 (msg:"COMMUNITY MISC Ntp fingerprint detect"; dsize:48; content:"|BE 78 2F 1D 19 BA 00 00|"; reference:url,www.arhont.com/ViewPage7422.html?siteNodeId=3&languageId=1&contentId=-1; classtype:attempted-dos; sid:100000198; rev:1;)
+#alert udp $EXTERNAL_NET 1023: -> $HOME_NET 123 (msg:"COMMUNITY MISC Ntp fingerprint detect"; dsize:48; content:"|BE 78 2F 1D 19 BA 00 00|"; reference:url,www.arhont.com/ViewPage7422.html?siteNodeId=3&languageId=1&contentId=-1; classtype:attempted-dos; sid:100000198; rev:1;)
 #Rule submitted by rmkml
 alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS 8008 (msg:"COMMUNITY MISC Novell eDirectory iMonitor access"; flow:to_server,established; uricontent:"/nds/"; nocase; reference:bugtraq,14548; reference:cve,2005-2551; reference:nessus,19248; reference:url,www.osvdb.org/displayvuln.php?osvdb_id=18703; classtype:web-application-attack; sid:100000199; rev:1;)
 #Rule submitted jointly by Romain Chartier, Sylvain Sarmejeanne, and Pierre Lalet

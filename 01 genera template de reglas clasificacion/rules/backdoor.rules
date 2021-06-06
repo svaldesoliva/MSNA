@@ -1,24 +1,3 @@
-# Copyright 2001-2021 Sourcefire, Inc. All Rights Reserved.
-#
-# This file contains (i) proprietary rules that were created, tested and certified by
-# Sourcefire, Inc. (the "VRT Certified Rules") that are distributed under the VRT
-# Certified Rules License Agreement (v 2.0), and (ii) rules that were created by
-# Sourcefire and other third parties (the "GPL Rules") that are distributed under the
-# GNU General Public License (GPL), v2.
-# 
-# The VRT Certified Rules are owned by Sourcefire, Inc. The GPL Rules were created
-# by Sourcefire and other third parties. The GPL Rules created by Sourcefire are
-# owned by Sourcefire, Inc., and the GPL Rules not created by Sourcefire are owned by
-# their respective creators. Please see http://www.snort.org/snort/snort-team/ for a
-# list of third party owners and their respective copyrights.
-# 
-# In order to determine what rules are VRT Certified Rules or GPL Rules, please refer
-# to the VRT Certified Rules License Agreement (v2.0).
-#
-#----------------
-# BACKDOOR RULES
-#----------------
-
 # Copyright 2001-2005 Sourcefire, Inc. All Rights Reserved
 #
 # This file may contain proprietary rules that were created, tested and
@@ -86,7 +65,7 @@ alert tcp $HOME_NET 30100:30102 -> $EXTERNAL_NET any (msg:"BACKDOOR NetSphere 1.
 alert tcp $EXTERNAL_NET any -> $HOME_NET 666 (msg:"BACKDOOR BackConstruction 2.1 Client FTP Open Request"; flow:to_server,established; content:"FTPON"; classtype:misc-activity; sid:157; rev:5;)
 alert tcp $HOME_NET 666 -> $EXTERNAL_NET any (msg:"BACKDOOR BackConstruction 2.1 Server FTP Open Reply"; flow:from_server,established; content:"FTP Port open"; classtype:misc-activity; sid:158; rev:5;)
 alert tcp $EXTERNAL_NET any -> $HOME_NET 5032 (msg:"BACKDOOR NetMetro File List"; flow:to_server,established; content:"--"; reference:arachnids,79; classtype:misc-activity; sid:159; rev:6;)
-alert tcp $EXTERNAL_NET 5031 -> $HOME_NET !53:80 (msg:"BACKDOOR NetMetro Incoming Traffic"; flow:stateless; flags:A+; reference:arachnids,79; classtype:misc-activity; sid:160; rev:6;)
+# alert tcp $EXTERNAL_NET 5031 -> $HOME_NET !53:80 (msg:"BACKDOOR NetMetro Incoming Traffic"; flow:stateless; flags:A+; reference:arachnids,79; classtype:misc-activity; sid:160; rev:6;)
 alert udp $EXTERNAL_NET 3344 -> $HOME_NET 3345 (msg:"BACKDOOR Matrix 2.0 Client connect"; content:"activate"; reference:arachnids,83; classtype:misc-activity; sid:161; rev:4;)
 alert udp $EXTERNAL_NET 3345 -> $HOME_NET 3344 (msg:"BACKDOOR Matrix 2.0 Server access"; content:"logged in"; reference:arachnids,83; classtype:misc-activity; sid:162; rev:4;)
 alert tcp $HOME_NET 5714 -> $EXTERNAL_NET any (msg:"BACKDOOR WinCrash 1.0 Server Active"; flow:stateless; flags:SA,12; content:"|B4 B4|"; reference:arachnids,36; classtype:misc-activity; sid:163; rev:9;)
