@@ -28,6 +28,8 @@ instalación: pip3 install plotly
 ### numpy 
 instalación: pip3 install numpy
 
+### netaddr
+instalación: pip3 install netaddr
 
 ## Operación
 - Copiar archivo "alert.csv" con las alertas desde la salida de Snort
