@@ -22,8 +22,11 @@ servicio=False
 # Carpeta web en donde se realizará la entrega de los datos
 carpetaSalida = "salida/" #"html/data/"
 
-
+# si es True, se basa en los archivos anteriores y solo obtiene nuevos graficos
 SoloGraficas=False
+
+# Red local
+redLocal="10.5.1.0/24"
 
 #################################################################
 # Software
@@ -35,7 +38,7 @@ import os
 from progress.bar import Bar
 
 
-__version__ = '0.1'
+__version__ = '0.9'
 
 
 def start():
@@ -106,7 +109,7 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 		for linea in Pygtail( archivoAlertas ):
 			alerta=lib.carga.separa(linea)
 			# Clasificar tipo (1,2,3,4); o null/vacia: si no es de interes o es imposible de clasificar
-			alertaClasificada=lib.carga.clasifica(alerta, clasificacion, repositorioAlertasClasificadas)
+			alertaClasificada=lib.carga.clasifica(alerta, clasificacion, repositorioAlertasClasificadas, redLocal)
 			if ( not alertaClasificada is None ) and ( len(alertaClasificada.index) > 0 ): # Se procesa solo si no viene vacía
 				##repositorioAlertasClasificadas.append(alertaClasificada, ignore_index=True)
 				## 'timestamp','SID','Etapa','Subetapa','Remoto','Local'

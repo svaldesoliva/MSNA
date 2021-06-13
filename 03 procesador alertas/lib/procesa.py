@@ -109,7 +109,6 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	"""
 	indicadores_atacantes = pd.read_csv(carpetaSalida + archivo_atacantes,encoding="latin-1",sep=";", index_col=0)
 	indicadores_hosts = pd.read_csv(carpetaSalida + archivo_hosts,encoding="latin-1",sep=";", index_col=0)
-	#indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
 	alertas_clasificadas = pd.read_csv(carpetaSalida + archivo_clasificadas,encoding="latin-1",sep=";")
 	
 
@@ -171,6 +170,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	# Indicadores detalle
 	#
 	"""
+	indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
 	largo=len(indicadores_detalle)
 	df_detalle = pd.DataFrame(columns=('Remoto','Etapa','Local','Contador'))
 	for i in range(largo): 
@@ -192,7 +192,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#alertas_etapa4=alertas_clasificadas.query("Etapa == 4").groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
 	alertas_interes0=alertas_clasificadas.groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
 	#por problemas de memoria nos centramos en graficos mas interesantes
-	alertas_etapa4=alertas_interes0.query("Total > 10") #no muy ambiciooso mas de 5 alertas
+	alertas_etapa4=alertas_interes0.query("Total > 2") #no muy ambiciooso mas de 5 alertas
 	alertas_etapa4 = alertas_etapa4.reset_index()
 	#print(alertas_etapa4)
 	alertas_interes0=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio, ahorro de RAM
@@ -264,7 +264,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 				signo = -1 * signo
 				niveles.append(signo * 0.05 * v / contadormaximo )
 
-			if ( cuantas_etapas > 1 ):
+			if ( cuantas_etapas > 1 ): #
 				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']) )
 		
 			alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio

@@ -15,6 +15,7 @@ import pandas.api.types as ptypes
 import numpy as np
 import os
 import math 
+from netaddr import IPNetwork, IPAddress
 
 def separa(linea):
 	"""
@@ -39,7 +40,7 @@ def separa(linea):
 	return(fila)
 
 
-def clasifica(alerta, clasificacion, repositorioAlertasClasificadas):
+def clasifica(alerta, clasificacion, repositorioAlertasClasificadas, redLocal):
 	"""
 	Recibe una alerta, y la clasifica segun tipo de alerta y etapa CKC. 
 
@@ -54,6 +55,8 @@ def clasifica(alerta, clasificacion, repositorioAlertasClasificadas):
 		campos del CSV de clasificacion: SID, Etapa, Subetapa, Observaciones, archivo, alerta 
 	repositorioAlertasClasificadas: Dataframe
 		Colección de alertas ya guardadas, aquí obtenemos la historia para reclasificar
+	redLocal: string
+		Red que consideraremos local
 	Returns
 	-------
 	AlertaClasificada: Dataframe or None
@@ -75,13 +78,39 @@ def clasifica(alerta, clasificacion, repositorioAlertasClasificadas):
 			else:
 				subetapa = int(clasificacionAlerta["Subetapa"].item())
 
+
 			if ( clasificacionAlerta["tipo_destino"].item() == 2 ): # 2 -> origen = local / estino = remoto
 				remoto = alerta[8]
 				local = alerta[6]
 			else: # 1 -> origen = local / estino = remoto  ///  
 				remoto = alerta[6]
 				local = alerta[8]
-
+			"""
+			# experimento de clasificacion de remoto/local. Inutil en contexto CTF en donde los nodos que se protejen tambiena atacan
+			if ( IPAddress( alerta[6] ) in IPNetwork( redLocal )) and not ( IPAddress( alerta[8] ) in IPNetwork( redLocal )):
+				remoto = alerta[8]
+				local = alerta[6]
+			else: # 1 -> origen = local / estino = remoto  ///  
+				if not ( IPAddress( alerta[6] ) in IPNetwork( redLocal )) and ( IPAddress( alerta[8] ) in IPNetwork( redLocal )):
+					remoto = alerta[6]
+					local = alerta[8]
+				else:
+					if (alerta[8]=="::" or alerta[8]=="255.255.255.255" ): #broadcast alerta[8] sera local
+						remoto = alerta[6]
+						local = alerta[8]
+					else:
+						if (alerta[6]=="::" or alerta[6]=="255.255.255.255"): #broadcast alerta[6] sera local
+							remoto = alerta[8]
+							local = alerta[6]
+						else:
+							a=alerta[6].split(".")
+							if (len(a)==4 and a[3]=="1"): #router
+								remoto = alerta[6]
+								local = alerta[8]
+							else:
+								remoto = alerta[8]
+								local = alerta[6]
+			"""
 			# Excepciones que sacan provecho a la identificación del avance por etapa:
 
 			# Si esta etapa es 2.1 (conexion existosa, sin problemas) y 
