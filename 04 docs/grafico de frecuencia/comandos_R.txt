@@ -1,0 +1,53 @@
+alertas <- read_delim("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/alertas_clasificadas_fases_1a3_grafico.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+
+alertas$hora=parse_time(alertas$timestamp, format = "03/07-%H:%M:%S")
+
+library(ggplot2)
+
+hits = plyr::count(alertas, vars = c("Fase","hora"))
+
+#ggplot(data = hits) + geom_line(aes(x = as.numeric(hora), y = freq)) + facet_wrap(~ Fase, nrow = 1)
+#ggplot(data = hits) + geom_bar(aes(x = hora, y = freq, fill = Fase), stat="identity", position = "dodge")
+#Cuidado con el limite
+ggplot(data = hits) + geom_bar(aes(x = hora, y = freq, fill = Fase), stat="identity", position = "dodge") + ylim(0,8)
+
+
+
+#Cuidado con el limite!! deja afuera datos sin aviso
+
+library(ggplot2)
+--------------
+-- Fase 1
+-------------
+alertas <- read_delim("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/alertas_clasificadas_fase_1_grafico.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+alertas$hora=parse_time(alertas$timestamp, format = "03/07-%H:%M:%S")
+hits = plyr::count(alertas, vars = c("Fase","hora"))
+#Cuidado con el limite
+ggplot(data = hits) + geom_bar(aes(x = hora, y = freq, fill = Fase), stat="identity", position = "dodge") + ylim(0,8)
+png("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase1.png")
+ggsave(   "D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase1.svg",
+  plot = last_plot(), device = "svg", dpi = 600, limitsize = TRUE)
+
+--------------
+-- Fase 2
+-------------
+alertas <- read_delim("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/alertas_clasificadas_fase_2_grafico.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+alertas$hora=parse_time(alertas$timestamp, format = "03/07-%H:%M:%S")
+hits = plyr::count(alertas, vars = c("Fase","hora"))
+#Cuidado con el limite
+ggplot(data = hits) + geom_bar(aes(x = hora, y = freq, fill = Fase), stat="identity", position = "dodge") + ylim(0,8)
+png("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase1.png")
+ggsave(   "D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase2.svg",
+  plot = last_plot(), device = "svg", dpi = 600, limitsize = TRUE)
+
+--------------
+-- Fase 3
+-------------
+alertas <- read_delim("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/alertas_clasificadas_fase_3_grafico.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+alertas$hora=parse_time(alertas$timestamp, format = "03/07-%H:%M:%S")
+hits = plyr::count(alertas, vars = c("Fase","hora"))
+#Cuidado con el limite
+ggplot(data = hits) + geom_bar(aes(x = hora, y = freq, fill = Fase), stat="identity", position = "dodge") + ylim(0,8)
+png("D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase3.png")
+ggsave(   "D:/Google Drive/Tesis-Ciberataque/desarrollo/04 docs/grafico de frecuencia/fase3.svg",
+  plot = last_plot(), device = "svg", dpi = 600, limitsize = TRUE)
