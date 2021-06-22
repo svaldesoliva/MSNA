@@ -57,7 +57,7 @@ def start():
 	indicadores_hosts = pd.DataFrame(columns=('Local', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'))
 	indicadores_detalle = pd.DataFrame(columns=('Remoto', 'Local', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'))
 	# Registro general de alertas ya clasificadas, inicial vacío
-	repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Remoto','Local'))
+	repositorioAlertasClasificadas = pd.DataFrame(columns=('timestamp','SID','Etapa','Subetapa','Remoto','Local', 'Alerta'))
 	# Carga inicial de clasificacion de reglas 
 	clasificacion = pd.read_csv(reglasClasificacion,encoding="latin-1",sep=";")
 	lib.carga.crear_archivo_sid_sin_clasificar()
@@ -113,7 +113,7 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 			if ( not alertaClasificada is None ) and ( len(alertaClasificada.index) > 0 ): # Se procesa solo si no viene vacía
 				##repositorioAlertasClasificadas.append(alertaClasificada, ignore_index=True)
 				## 'timestamp','SID','Etapa','Subetapa','Remoto','Local'
-				repositorioAlertasClasificadas.loc[len(repositorioAlertasClasificadas.index)] = [alertaClasificada["timestamp"].item(), alertaClasificada["SID"].item(), alertaClasificada["Etapa"].item(), alertaClasificada["Subetapa"].item(), alertaClasificada["Remoto"].item(), alertaClasificada["Local"].item()]
+				repositorioAlertasClasificadas.loc[len(repositorioAlertasClasificadas.index)] = [alertaClasificada["timestamp"].item(), alertaClasificada["SID"].item(), alertaClasificada["Etapa"].item(), alertaClasificada["Subetapa"].item(), alertaClasificada["Remoto"].item(), alertaClasificada["Local"].item(), alertaClasificada["Alerta"].item()]
 				indicadores_atacantes, indicadores_hosts, indicadores_detalle = lib.procesa.generaIndicadores(alertaClasificada, indicadores_atacantes, indicadores_hosts, indicadores_detalle)
 				if servicio: #Guarda avance, genera indicadores graficos x grupo para mostrar avance 
 					contadorGrupo = contadorGrupo + 1
@@ -148,10 +148,12 @@ def run(repositorioAlertasClasificadas, clasificacion, indicadores_atacantes, in
 			print(indicadores_hosts)
 			print("indicadores detalle")
 			print(indicadores_detalle)
-		#""
+
 		#https://www.delftstack.com/es/howto/matplotlib/pandas-plot-multiple-columns-on-bar-chart-matplotlib/
 		#http://bl.ocks.org/ndarville/7075823
+
 	# Fin / if SoloGraficas
+
 	if not servicio:
 		print("Generando graficos")
 	lib.procesa.generaGraficos( "indicadores_atacantes.csv", "indicadores_hosts.csv",  "indicadores_detalle.csv", "alertas_clasificadas.csv", carpetaSalida )

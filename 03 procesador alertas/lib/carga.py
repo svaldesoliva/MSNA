@@ -141,7 +141,9 @@ def clasifica(alerta, clasificacion, repositorioAlertasClasificadas, redLocal):
 										'Etapa': etapa,
 										'Subetapa': subetapa,
 										'Remoto': remoto,
-										'Local': local  }, index=[0])
+										'Local': local,
+										'Alerta': clasificacionAlerta["alerta"].item() # alerta[4] tiene menos informacion (solo msg)
+									}, index=[0])
 			return(AlertaClasificada)
 	else: 
 		guarda_sid_sin_clasificar(alerta[2])

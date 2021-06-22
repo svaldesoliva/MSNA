@@ -192,7 +192,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#alertas_etapa4=alertas_clasificadas.query("Etapa == 4").groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
 	alertas_interes0=alertas_clasificadas.groupby('Remoto').agg( {"Remoto":"count"}).rename(columns={'Remoto': 'Total'})
 	#por problemas de memoria nos centramos en graficos mas interesantes
-	alertas_etapa4=alertas_interes0.query("Total > 2") #no muy ambiciooso mas de 5 alertas
+	alertas_etapa4=alertas_interes0.query("Total > 5") #no muy ambiciooso mas de 5 alertas
 	alertas_etapa4 = alertas_etapa4.reset_index()
 	#print(alertas_etapa4)
 	alertas_interes0=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio, ahorro de RAM
@@ -268,6 +268,8 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']) )
 		
 			alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
+
+
 
 
 def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total_alertas ):
