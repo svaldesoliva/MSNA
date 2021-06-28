@@ -169,7 +169,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#
 	# Indicadores detalle
 	#
-	"""
+	
 	indicadores_detalle = pd.read_csv(carpetaSalida + archivo_detalle,encoding="latin-1",sep=";")
 	largo=len(indicadores_detalle)
 	df_detalle = pd.DataFrame(columns=('Remoto','Etapa','Local','Contador'))
@@ -183,7 +183,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	fig = genSankey(df_detalle,cat_cols=['Remoto','Etapa','Local'],value_cols='Contador',title='Grafico')
 	plotly.offline.plot(fig, filename=carpetaSalida + 'detalle_interactivo.html')
 	#plot_mpl(fig, image='png', filename=carpetaSalida + 'detalle_interactivo.png')
-	"""
+	
 
 	#
 	# Avance en los cambios de etapa
@@ -264,15 +264,17 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 				signo = -1 * signo
 				niveles.append(signo * 0.05 * v / contadormaximo )
 
-			if ( cuantas_etapas > 1 ): #
-				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']) )
+			if ( cuantas_etapas > 1 ): # Solo si tiene mas de una etapa
+				# Con y sin etiquetas (sin etiqueta es util si hay muchas etapas)
+				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']), True )
+				generaTimeLine(niveles, nombres, fechahora, etapas, str(row['Remoto'] + " a " + row3['Local']), carpetaSalida, str(row3['Total']), False )
 		
 			alertas_interes=pd.DataFrame() # Vaciamos el dataframe con el resultado intermedio
 
 
 
 
-def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total_alertas ):
+def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total_alertas, usarEtiquetas=False ):
 	"""
 	Genera graficos tipo timeline de un solo atacante separado del resto.
 	https://matplotlib.org/stable/gallery/lines_bars_and_markers/timeline.html#sphx-glr-gallery-lines-bars-and-markers-timeline-py
@@ -292,6 +294,8 @@ def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total
 		dirección ip del atacante
 	carpetaSalida: string
 		carpeta de salida, donde se encuentran los archivos y donde se dejarán las imagenes
+	usarEtiquetas: bool
+		Dibujar o no etiquetas
 	Returns
 	-------
 
@@ -302,21 +306,24 @@ def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total
 	ax.set(title="Línea de tiempo para ataques de " + atacante)
 
 	#ax.vlines(dates, 0, levels, color="tab:red")  # The vertical stems.
+
 	ax.vlines(dates, 0, levels, color=colores)
-	ax.plot(dates, np.zeros_like(dates), "-o",
-	        color="k", markerfacecolor="w")  # Baseline and markers on it.
+	if (usarEtiquetas):
+		ax.plot(dates, np.zeros_like(dates), "-o",
+		        color="k", markerfacecolor="w")  # Baseline and markers on it.
+	else:
+		ax.plot(dates, np.zeros_like(dates), "-",
+	        	color="k", markerfacecolor="w")  # Baseline and markers on it.
 
 	# annotate lines
-	for d, l, r in zip(dates, levels, names):
-		ax.annotate(r, xy=(d, l),
+	if (usarEtiquetas):
+		for d, l, r in zip(dates, levels, names):
+			ax.annotate(r, xy=(d, l),
 								xytext=(-3, np.sign(l)*3), textcoords="offset points",
 								horizontalalignment="right",
 								verticalalignment="bottom" if l > 0 else "top")
 
-	# format xaxis with 4 month intervals
-	#ax.xaxis.set_major_locator(mdates.MonthLocator(interval=4))
-	#ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-	plt.setp(ax.get_xticklabels(), rotation=90, ha="right")
+		plt.setp(ax.get_xticklabels(), rotation=90, ha="right")
 
 	# remove y axis and spines
 	ax.yaxis.set_visible(False)
@@ -328,15 +335,21 @@ def generaTimeLine(levels, names, dates, colores, atacante, carpetaSalida, total
 	ax.margins(y=0.1)
 	#plt.show()
 	file_atacante = atacante.replace(":", "-")
-	plt.savefig(carpetaSalida + 'time_line_atacante_' + total_alertas + "_" + file_atacante + '.svg', dpi=300, format='svg', bbox_inches='tight')
+	if (usarEtiquetas):
+		txt="_ce" # con etiquetas
+	else:
+		txt="_se"
+	plt.savefig(carpetaSalida + 'time_line_atacante_' + total_alertas + "_" + file_atacante + txt + '.svg', dpi=300, format='svg', bbox_inches='tight')
 	#plt.savefig(carpetaSalida + 'time_line_atacante_' + file_atacante + '.png', dpi=300, format='png', bbox_inches='tight')
 	plt.close()
 
 
 
-"""
-  FUNCION DESACTIVADA
-
+#
+#
+#  Para dibujar bien requiere datos filtrados
+#
+#
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     #
     #  Función obtenida desde https://medium.com/kenlok/how-to-create-sankey-diagrams-from-dataframes-in-python-e221c1b4d6b0
@@ -402,4 +415,4 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
        
     fig = dict(data=[data], layout=layout)
     return fig
-"""
+
