@@ -25,7 +25,7 @@ carpetaSalida = "salida/" #"html/data/"
 # si es True, se basa en los archivos anteriores y solo obtiene nuevos graficos
 SoloGraficas=False
 
-# Red local
+# Red local - NO OPERATIVO!!!!!!!
 redLocal="10.5.1.0/24"
 
 #################################################################
