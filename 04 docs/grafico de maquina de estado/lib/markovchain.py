@@ -4,7 +4,7 @@ from matplotlib.collections import PatchCollection
 import matplotlib.pyplot as plt
 
 # module from this repository
-from node import Node
+from lib.node import Node
 
 class MarkovChain:
 
