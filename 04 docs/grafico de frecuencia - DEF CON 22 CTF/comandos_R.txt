@@ -3,23 +3,23 @@ PREVIO
 
 if(!require(readr)) {
          install.packages("readr")
-         library(readr)}
+         library(readr)};
 
 if(!require(anytime)) {
          install.packages("anytime")
-         library(anytime)}
+         library(anytime)};
 
 if(!require(ggplot2)) {
          install.packages("ggplot2")
-         library(ggplot2)}
+         library(ggplot2)};
 
 if(!require(tidyverse)) {
          install.packages("tidyverse")
-         library(tidyverse)}
+         library(tidyverse)};
 
 if(!require(lubridate)) {
          install.packages("lubridate")
-         library(lubridate)}
+         library(lubridate)};
 --------------
 -- Dia 1 (08 de agosto)
 -------------
@@ -30,8 +30,9 @@ alertas$hora <- cut(alertas$horas, breaks = "15 min");
 hits = plyr::count(alertas, vars = c("hora"));
 ggplot(data = hits) + 
     geom_bar(aes(x = hora, y = freq), stat="identity", position = "dodge") + 
-    labs(title="Serie de tiempo de ataques", 
-       subtitle="DEF CON 22 CTF, subred PPP", 
+    ylim(0,1700) + 
+    labs(title="DEF CON 22 CTF", 
+       subtitle="Subred PPP", 
        #caption="Source: Economics", 
        y="Ataques", 
        color=NULL) + 
@@ -48,8 +49,9 @@ alertas$hora <- cut(alertas$horas, breaks = "15 min");
 hits = plyr::count(alertas, vars = c("hora"));
 ggplot(data = hits) + 
     geom_bar(aes(x = hora, y = freq), stat="identity", position = "dodge") + 
-    labs(title="Serie de tiempo de ataques", 
-       subtitle="DEF CON 22 CTF, subred PPP", 
+    ylim(0,1700) + 
+    labs(title="DEF CON 22 CTF", 
+       subtitle="Subred PPP", 
        #caption="Source: Economics", 
        y="Ataques", 
        color=NULL) + 
@@ -67,8 +69,9 @@ alertas$hora <- cut(alertas$horas, breaks = "15 min");
 hits = plyr::count(alertas, vars = c("hora"));
 ggplot(data = hits) + 
     geom_bar(aes(x = hora, y = freq), stat="identity", position = "dodge") + 
-    labs(title="Serie de tiempo de ataques", 
-       subtitle="DEF CON 22 CTF, subred PPP", 
+    ylim(0,1700) + 
+    labs(title="DEF CON 22 CTF", 
+       subtitle="Subred PPP", 
        #caption="Source: Economics", 
        y="Ataques", 
        color=NULL) + 
