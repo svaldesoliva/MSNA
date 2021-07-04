@@ -126,7 +126,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 	#    
 	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,alto_atacantes), fontsize=6, log=False, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
 	#plt.legend(loc="lower left",bbox_to_anchor=(0.8,0.95))   # ["#fedf8b","#fdad60","#f46c43","#d43d4f" / #3387bc
-	plt.title('Ataques recibidos por atacante')
+	plt.title('Ataques enviados por Host')
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('Atacante')
 	#plt.show()	 #os.path.join('test.png') # use format='svg' or 'pdf' for vectorial pictures
@@ -136,7 +136,7 @@ def generaGraficos(archivo_atacantes, archivo_hosts, archivo_detalle, archivo_cl
 
 	# escala logaritmica
 	indicadores_atacantes.plot.barh(stacked = True, figsize=(10,alto_atacantes), fontsize=6, log=True, color=["#6ec7ff","#fedf8b","#f46c43","#d43d4f"])
-	plt.title('Ataques recibidos por atacante (escala logaritmica)')
+	plt.title('Ataques enviados por Host (escala logaritmica)')
 	plt.xlabel('Cantidad de ataques')
 	plt.ylabel('Atacante')
 	plt.savefig(carpetaSalida + 'imagenResumenAtacante_log.svg', dpi=300, format='svg', bbox_inches='tight') 
