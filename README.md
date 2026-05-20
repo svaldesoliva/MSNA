@@ -1,5 +1,15 @@
 # Procesador de Alertas Snort
 
+
+## Entorno y dependencias
+Se recomienda usar un entorno virtual de Python para la ejecución de los scripts del repositorio.
+```python
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requierements.txt
+```
+
+---
 ## 01 genera template de reglas clasificacion
 Genera un archivo vacío de clasificación, basado en las reglas de Snort, para iniciar la clasificación
 
