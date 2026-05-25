@@ -6,8 +6,10 @@ import pandas as pd
 from pygtail import Pygtail
 
 #config inicial
-ARCHIVO_ALERTAS = "alert.csv"
-REGLAS_CLASIFICACION = "clasificacion.csv"
+# El archivo de alertas es el que genera el script 02 (ejemplo: alert_phase-1-dump.csv)
+ARCHIVO_ALERTAS = "../05 experimento/DEF CON 22/02 alertas Snort/ppp/alert.csv"
+# Apuntamos directamente al archivo generado en la etapa 01
+REGLAS_CLASIFICACION = "../01 genera template de reglas clasificacion/clasificacion_base.csv"
 ARCHIVO_SID_NC = "sid_sin_clasificar.csv"
 CARPETA_SALIDA = Path("salida/")
 SERVICIO = False
@@ -31,27 +33,28 @@ def load_classification() -> dict:
         print(f"Error: No existe el archivo {REGLAS_CLASIFICACION}")
         return clasificacion
         
-    df = pd.read_csv(REGLAS_CLASIFICACION, sep=";", encoding="latin-1", dtype=str)
+    # El archivo generado en el paso 01 usa ';' como separador
+    df = pd.read_csv(REGLAS_CLASIFICACION, sep=";", encoding="utf-8", dtype=str)
     
     for _, row in df.iterrows():
         try:
             # Ignorar nulos y ceros
-            if pd.isna(row['Etapa']) or str(row['Etapa']).strip() == '0':
+            if pd.isna(row['Etapa']) or str(row['Etapa']).strip() == '0' or str(row['Etapa']).strip() == '':
                 continue
                 
-            etapa = int(row['Etapa'])
+            etapa = int(float(row['Etapa']))
             if not (1 <= etapa <= 4):
                 continue
                 
-            subetapa = int(row['Subetapa']) if pd.notna(row['Subetapa']) and str(row['Subetapa']).strip() else 0
+            subetapa = int(float(row['Subetapa'])) if pd.notna(row['Subetapa']) and str(row['Subetapa']).strip() else 0
             
             clasificacion[str(row['SID'])] = {
                 'Etapa': etapa,
                 'Subetapa': subetapa,
-                'tipo_destino': int(row['tipo_destino']) if pd.notna(row['tipo_destino']) else 0,
+                'tipo_destino': int(float(row['tipo_destino'])) if pd.notna(row['tipo_destino']) else 0,
                 'Alerta': str(row['alerta'])
             }
-        except ValueError:
+        except Exception:
             continue
             
     return clasificacion
@@ -142,6 +145,7 @@ def run_processing():
             return
 
         clasificacion = load_classification()
+        print(f"DEBUG: Se cargaron {len(clasificacion)} reglas de clasificación.")
         init_sid_file()
         
         # Estados

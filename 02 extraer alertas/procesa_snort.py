@@ -3,8 +3,12 @@ import shutil
 from pathlib import Path
 
 def process_pcaps():
-    print("Deteniendo servicio snort...")
-    subprocess.run(["service", "snort", "stop"], capture_output=True)
+    print("Intentando detener servicio snort (si existe)...")
+    try:
+        subprocess.run(["service", "snort", "stop"], capture_output=True)
+    except FileNotFoundError:
+        # En entornos Docker minimalistas 'service' puede no existir
+        pass
 
     #ajustar segun OS
     log_snort = Path("/var/log/snort/snort.log")

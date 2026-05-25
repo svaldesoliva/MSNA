@@ -1,0 +1,18 @@
+services:
+  snort:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: snort-msna
+    volumes:
+      - ..:/app
+      - ./snort.conf:/etc/snort/snort.conf
+      - "../01 genera template de reglas clasificacion/rules:/etc/snort/rules"
+      - "../01 genera template de reglas clasificacion/map:/etc/snort/map"
+      - snort_logs:/var/log/snort
+    working_dir: /app
+    tty: true
+    stdin_open: true
+
+volumes:
+  snort_logs:
