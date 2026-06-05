@@ -17,7 +17,8 @@ tarea_manuel_cano.py
 sid_sin_clasificar.csv
 03 procesador alertas/salida/*
 03 procesador alertas/alert.csv
-
+DEFCON200GB
+*.pcap
 .idea/
 
 
